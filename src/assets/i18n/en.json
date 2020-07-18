@@ -1,0 +1,31 @@
+{
+    "lable_translate": {
+        "owner_details": "Owner Details",
+        "owner_name": "Owner Name",
+        "street": "Street",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "taluka": "Taluka",
+        "district": "District",
+        "state": "State",
+        "country": "Country",
+        "phone_number": "Phone Number",
+        "mobile_number": "Mobile Number",
+        "alt_mobile_number": "Alternative Mobile Number",
+        "adhaar_card_number": "Adhaar Card Number",
+        "pan_card_number": "PAN Card Number",
+        "state_code": "State Code",
+        "company_name": "Company Name",
+        "gst_number": "G.S.T. Number",
+        "company_details": "Company Details",
+        "save_owner_details": "Save Owner Details",
+        "save_company_details": "Save Company Details",
+        "employee_list": "Employee List",
+        "customer_list": "Customer List",
+        "supplier_list": "Supplier List",
+        "add_employee": "Add Employee",
+        "add_customer": "Add Customer",
+        "add_supplier": "Add Supplier"
+    }
+
+}

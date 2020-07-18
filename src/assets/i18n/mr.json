@@ -1,0 +1,30 @@
+{
+    "lable_translate": {
+        "owner_details": "कंपनी मालकाची माहिती",
+        "owner_name": "कंपनी मालकाचं नाव",
+        "street": "पत्ता",
+        "city": "शहर",
+        "postal_code": "पिन कोड",
+        "taluka": "तालुका",
+        "district": "जिल्हा",
+        "state": "राज्य",
+        "country": "देश",
+        "phone_number": "फोन नंबर",
+        "mobile_number": "मोबाईल नंबर",
+        "alt_mobile_number": "अतिरिक्त मोबाईल नंबर",
+        "adhaar_card_number": "आधार कार्ड नंबर",
+        "pan_card_number": "पॅन नंबर",
+        "state_code": "राज्य कोड",
+        "company_name": "कंपनीचे नाव",
+        "gst_number": "जी.एस.टी. नंबर",
+        "company_details": "कंपनी डिटेल्स",
+        "save_owner_details": "माहिती सेव्ह करा",
+        "save_company_details": "माहिती सेव्ह करा",
+        "employee_list": "कर्मचारी यादी",
+        "customer_list": "कस्टमर यादी",
+        "supplier_list": "सप्लायर यादी",
+        "add_employee": "नवीन कर्मचारी",
+        "add_customer": "नवीन कस्टमर",
+        "add_supplier": "नवीन सप्लायर"
+    }
+}
