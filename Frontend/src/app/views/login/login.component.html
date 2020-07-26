@@ -6,24 +6,35 @@
                     <div class="card-group">
                         <div class="card p-4">
                             <div class="card-body">
-                                <form>
+                                <form [formGroup]="loginForm" (ngSubmit)="login()">
+
                                     <h1>Login</h1>
                                     <p class="text-muted">Sign In to your account</p>
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="icon-user"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username" name="username">
+                                        <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username" name="username" formControlName="username">
                                     </div>
-                                    <div class="input-group mb-4">
+                                    <div *ngIf="loginForm.controls['username'].invalid && (loginForm.controls['username'].dirty || loginForm.controls['username'].touched)">
+                                        <div *ngIf="loginForm.controls['username'].errors.required" class="text-danger">
+                                            Name is required.
+                                        </div>
+                                    </div>
+                                    <div class="input-group mt-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="icon-lock"></i></span>
                                         </div>
-                                        <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
+                                        <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password" formControlName="password">
                                     </div>
-                                    <div class="row">
+                                    <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+                                        <div *ngIf="loginForm.controls['password'].errors.required" class="text-danger">
+                                            Password is required.
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
                                         <div class="col-6">
-                                            <button type="button" class="btn btn-primary px-4" (click)="login()">Login</button>
+                                            <button type="submit" class="btn btn-primary px-4">Login</button>
                                         </div>
                                         <div class="col-6 text-right">
                                             <button type="button" class="btn btn-link px-0">Forgot password?</button>
