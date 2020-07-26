@@ -3,39 +3,32 @@ import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: 'login.component.html',
-  styleUrls: [ './login.component.css' ]
-
+	selector: 'app-dashboard',
+	templateUrl: 'login.component.html',
+	styleUrls: [ './login.component.css' ]
 })
-export class LoginComponent { 
+export class LoginComponent {
+	loginForm: FormGroup;
 
-  username: any;
+	username: any;
 	password: any;
-  loginDetails: any;
-  
-  constructor(private router: Router) {}
-  
-  	ngOnInit() {
-        
-  }
+	loginDetails: any;
 
-  
+	constructor(private router: Router, private fb: FormBuilder) {}
+
+	ngOnInit() {
+		this.loginForm = this.fb.group({
+			username: [ '', Validators.required ],
+			password: [ '', Validators.required ]
+		});
+	}
+
 	login() {
+		if (this.loginForm.invalid) {
+			this.loginForm.markAllAsTouched();
+			return;
+		}
 
-  if(this.username=='' || this.username==undefined)
-  {
-    alert("Please enter user name");
-    return;
-  }
-  if(this.password=='' || this.password==undefined)
-  {
-    alert("Please enter password");
-    return;
-
-  }
-  
-  this.router.navigate([ '/dashboard' ]);
-
-}
+		this.router.navigate([ '/dashboard' ]);
+	}
 }
