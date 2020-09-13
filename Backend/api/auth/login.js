@@ -5,12 +5,11 @@ var md5 = require('md5');
 
 router.post('/login', (req, res) => {
     let loginQuery =
-        "SELECT user_id,user_name,user_password,user_role from user_master where user_name = '" +
+        "SELECT user_master.company_id,user_id,user_name,user_password,user_role,company_master.company_name from user_master left join company_master on company_master.company_id=user_master.company_id where user_name = '" +
         req.body.userName +
         "' AND user_password='" +
         req.body.userPassword +
         "' AND account_status=1";
-    console.log(loginQuery);
     db.query(loginQuery, (err, result) => {
         if (err) {
             console.log(err.message);

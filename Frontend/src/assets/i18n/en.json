@@ -25,7 +25,7 @@
         "supplier_list": "Supplier List",
         "add_employee": "Add Employee",
         "add_customer": "Add Customer",
-        "add_supplier": "Add Supplier"
+        "add_supplier": "Add Supplier",
+        "company_tagline": "Company Tagline"
     }
-
 }

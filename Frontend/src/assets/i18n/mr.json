@@ -25,6 +25,7 @@
         "supplier_list": "सप्लायर यादी",
         "add_employee": "नवीन कर्मचारी",
         "add_customer": "नवीन कस्टमर",
-        "add_supplier": "नवीन सप्लायर"
+        "add_supplier": "नवीन सप्लायर",
+        "company_tagline": "कंपनी टॅगलाईन "
     }
 }

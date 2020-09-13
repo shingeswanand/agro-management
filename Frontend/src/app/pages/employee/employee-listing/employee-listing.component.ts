@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-employee-listing',
@@ -8,9 +9,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class EmployeeListingComponent implements OnInit {
 
-  constructor(public translate:TranslateService) { }
+  constructor(public translate:TranslateService,private router:Router) { }
 
   ngOnInit(): void {
+  }
+
+  goForEmployeeDetails()
+  {
+    this.router.navigate(['/employee_details'])
   }
 
 }

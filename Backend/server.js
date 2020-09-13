@@ -29,24 +29,22 @@ app.use(bodyParser.json());
 const auth = require('./api/auth/login');
 app.use('/login', auth);
 
-// const setting = require('./models/setting');
-// app.use('/setting', setting);
+const company = require('./api/company/company_details');
+app.use('/company', company);
 
-// let connection = mysql.createConnection({
-//     host: 'ec2-13-229-82-245.ap-southeast-1.compute.amazonaws.com',
-//     user: 'kaustubhAgro',
-//     password: 'kaustubhAgro@123',
-//     database: 'KaustubhAgroDB',
-//     port: '3306',
-//     acquireTimeout: 90000 //30 secs
-// });
+const bankMaster = require('./api/bankMaster/bankMaster.router');
+app.use('/bankMaster', bankMaster);
 
-// connection.connect(function(err) {
-//     if (err) {
-//         return console.error('error: ' + err);
-//     }
-//     console.log('Connected to the MySQL server.');
-// });
+const customer = require('./api/customer/customer.router');
+app.use('/customer', customer);
+
+const products = require('./api/products/products.router');
+app.use('/products', products);
+
+
+const saleInvoice = require('./api/saleInvoice/saleInvoice.router');
+app.use('/saleInvoice', saleInvoice);
+
 
 const server = http.createServer(app);
 server.listen(port, () => console.log('Running at 8000'));

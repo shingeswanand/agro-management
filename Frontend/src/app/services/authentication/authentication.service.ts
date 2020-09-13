@@ -9,6 +9,6 @@ export class AuthenticationService {
 	constructor(private httpClient: HttpClient) {}
 
 	login(data) {
-		return this.httpClient.post(environment.apiBaseUrl + 'auth/login', data);
+		return this.httpClient.post(environment.apiBaseUrl + 'login/login', data);
 	}
 }
