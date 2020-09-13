@@ -10,7 +10,8 @@
       "@angular/*": [
         "../node_modules/@angular/*"
       ]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "enableIvy": false

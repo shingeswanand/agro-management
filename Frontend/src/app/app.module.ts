@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER } from 'ngx-ui-loader';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -42,6 +44,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 // export function HttpLoaderFactory(http:HttpClient){
 //   return new TranslateHttpLoader(http);
 // }
@@ -50,8 +53,44 @@ export function createTranslateLoader(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+	bgsColor: 'red',
+	bgsOpacity: 0.5,
+	bgsPosition: 'bottom-right',
+	bgsSize: 60,
+	bgsType: 'ball-spin-clockwise',
+	blur: 5,
+	delay: 0,
+	fastFadeOut: true,
+	fgsColor: '#63c2de',
+	fgsPosition: 'center-center',
+	fgsSize: 60,
+	fgsType: 'three-strings',
+	gap: 24,
+	logoPosition: 'center-center',
+	logoSize: 120,
+	logoUrl: '',
+	masterLoaderId: 'master',
+	overlayBorderRadius: '0',
+	overlayColor: 'rgba(40, 40, 40, 0.8)',
+	pbColor: 'red',
+	pbDirection: 'ltr',
+	pbThickness: 3,
+	hasProgressBar: true,
+	text: 'Please Wait...',
+	textColor: '#000000',
+	textPosition: 'center-center',
+	maxTime: -1,
+	minTime: 300
+};
+
 @NgModule({
 	imports: [
+		ToastrModule.forRoot({
+			timeOut: 3000,
+			positionClass: 'toast-top-right'
+		}),
+		NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
 		HttpClientModule,
 		FormsModule,
 		ReactiveFormsModule,

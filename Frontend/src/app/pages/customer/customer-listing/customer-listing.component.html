@@ -4,73 +4,68 @@
             <div class="card">
                 <div class="card-header text-white bg-info">
                     <strong>{{'lable_translate.customer_list' | translate}}</strong>
-                    <button type="button" class="btn btn-success btn-sm" style="float: right;" (click)="add_customer()"><i class="icon-emotsmile icons"></i>&nbsp;<strong>{{'lable_translate.add_customer' | translate}}</strong></button>
+                    <!-- <button type="button" class="btn btn-success btn-sm" style="float: right;" (click)="add_customer()"><i
+                            class="icon-emotsmile icons"></i>&nbsp;<strong>{{'lable_translate.add_customer' | translate}}</strong></button> -->
                 </div>
-                <div class="card-body">
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Joining Date</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Vishnu Serghei</td>
-                                <td>2012/01/01</td>
-                                <td>Member</td>
-                                <td>
-                                    <span class="badge badge-success">Active</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Zbyněk Phoibos</td>
-                                <td>2012/02/01</td>
-                                <td>Staff</td>
-                                <td>
-                                    <span class="badge badge-danger">Banned</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Einar Randall</td>
-                                <td>2012/02/01</td>
-                                <td>Admin</td>
-                                <td>
-                                    <span class="badge badge-secondary">Inactive</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Félix Troels</td>
-                                <td>2012/03/01</td>
-                                <td>Member</td>
-                                <td>
-                                    <span class="badge badge-warning">Pending</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Aulus Agmundr</td>
-                                <td>2012/01/21</td>
-                                <td>Staff</td>
-                                <td>
-                                    <span class="badge badge-success">Active</span>
-                                </td>
-                            </tr>
-                        </tbody>
+                <!-- <div class="card-body"> -->
+                <div class="mat-elevation-z8">
+                    <div class="row mr-0 ml-0">
+                        <div class="col-md-6" style="margin-top: 10px;">
+                            <mat-form-field fxFlex="40%">
+                                <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="text-align: right;margin-top: 15px;">
+                            <button mat-flat-button color="primary" (click)="add_customer()">Add Customer</button>
+                        </div>
+                    </div>
+                    <table class="mat-elevation-z8" mat-table [dataSource]="dataSource">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="ID">
+                            <th mat-header-cell *matHeaderCellDef> No. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.customer_id}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="Name">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.customer_name}} </td>
+                        </ng-container>
+
+                        <!-- Weight Column -->
+                        <ng-container matColumnDef="Mobile No.">
+                            <th mat-header-cell *matHeaderCellDef> Mobile No. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.customer_mobile_no}} </td>
+                        </ng-container>
+
+                        <!-- Symbol Column -->
+                        <ng-container matColumnDef="Address">
+                            <th mat-header-cell *matHeaderCellDef> Address </th>
+                            <td mat-cell *matCellDef="let element"> {{element.customer_address}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button class="btn btn-primary" style="border-radius: 50%;" (click)="editCustomer(element.customer_id)">
+                                    <i class="fa fa-edit" style="width:10px;"></i>
+                                    <!-- <mat-icon>delete</mat-icon> -->
+                                </button>
+                                <button class="btn btn-danger" style="border-radius: 50%;" (click)="deleteCustomer(element.customer_id)">
+                                    <i class="fa fa-trash"></i>
+                                    <!-- <mat-icon>edit</mat-icon> -->
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">4</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
+
+                    <!-- <mat-paginator [pageSize]="2" [pageSizeOptions]="[2, 4, 6, 10, 20]">
+                    </mat-paginator> -->
+                    <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons (page)="pageChanged($event)"></mat-paginator>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>

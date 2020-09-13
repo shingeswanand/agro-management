@@ -1,0 +1,360 @@
+<!-- <div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12"> -->
+<div class="card">
+    <div class="card-header text-white bg-info">
+        <strong>Sale Invoice</strong>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="saleDetailsForm" (ngSubmit)="submitSaleInvoice()">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Invoice No.</label>
+                        <input type="text" class="form-control" placeholder="Enter Invoice No." formControlName="invoice_no">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Date Of Issue</label>
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" formControlName="invoice_date" required></my-date-picker>
+                        <!-- <input angular-mydatepicker name="mydate" [(ngModel)]="selectedInvoiceDate" [options]="myOptions" #dp="angular-mydatepicker" /> -->
+                        <!--   <mat-form-field class="example-full-width" appearance="fill"> -->
+                        <!-- <mat-label>Choose a date</mat-label> -->
+                        <!-- <dp-day-time-calendar [(ngModel)]="selectedInvoiceDate" [config]="config"></dp-day-time-calendar> -->
+                        <!-- </mat-form-field> -->
+                        <!-- <input type="text" class="form-control" placeholder="Enter your mobile number"> -->
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>e-Way Bill No.</label>
+                        <input type="text" class="form-control" placeholder="Enter E-Way No." formControlName="eWayBillNumber">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Dispatch Through</label>
+                        <input type="text" class="form-control" placeholder="Enter dispatch through" formControlName="dispatch_through">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Vehicle No.</label>
+                        <input type="text" class="form-control" placeholder="Enter vehicle no." formControlName="vehicle_number">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Select Payment Mode</label>
+                        <select class="form-control" (change)="onPaymentModeChange()" formControlName="payment_mode">
+                                <option value="" hidden disabled>Select Payment Method</option>
+                                <option value="1">Cash</option>
+                                <option value="2">Cheque</option>
+                                <option value="3">NEFT</option>
+                                <option value="4">UPI</option>
+                            </select>
+                        <!-- <label>State</label>
+                                                                                            <input type="text" class="form-control" placeholder="Enter your state" formControlName="customer_state"> -->
+                    </div>
+                </div>
+                <div class="col-sm-2" *ngIf="isCashPayment">
+                    <div class="form-group">
+                        <label>Cash Payment Date</label>
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" formControlName="cash_payment_date">
+                        </my-date-picker>
+                        <!-- <input angular-mydatepicker name="mydate" [(ngModel)]="selectedInvoiceDate" [options]="myOptions" #dp="angular-mydatepicker" /> -->
+                        <!--   <mat-form-field class="example-full-width" appearance="fill"> -->
+                        <!-- <mat-label>Choose a date</mat-label> -->
+                        <!-- <dp-day-time-calendar [(ngModel)]="selectedInvoiceDate" [config]="config"></dp-day-time-calendar> -->
+                        <!-- </mat-form-field> -->
+                        <!-- <input type="text" class="form-control" placeholder="Enter your mobile number"> -->
+                    </div>
+                </div>
+                <div class="col-sm-2" *ngIf="isChequePayment">
+                    <div class="form-group">
+                        <label>Cheque Date</label>
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" formControlName="cheque_date">
+                        </my-date-picker>
+                        <!-- <input angular-mydatepicker name="mydate" [(ngModel)]="selectedInvoiceDate" [options]="myOptions" #dp="angular-mydatepicker" /> -->
+                        <!--   <mat-form-field class="example-full-width" appearance="fill"> -->
+                        <!-- <mat-label>Choose a date</mat-label> -->
+                        <!-- <dp-day-time-calendar [(ngModel)]="selectedInvoiceDate" [config]="config"></dp-day-time-calendar> -->
+                        <!-- </mat-form-field> -->
+                        <!-- <input type="text" class="form-control" placeholder="Enter your mobile number"> -->
+                    </div>
+                </div>
+                <div class="col-sm-2" *ngIf="isUPIPayment">
+                    <div class="form-group">
+                        <label>UPI Payment Date</label>
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" formControlName="upi_payment_date">
+                        </my-date-picker>
+                        <!-- <input angular-mydatepicker name="mydate" [(ngModel)]="selectedInvoiceDate" [options]="myOptions" #dp="angular-mydatepicker" /> -->
+                        <!--   <mat-form-field class="example-full-width" appearance="fill"> -->
+                        <!-- <mat-label>Choose a date</mat-label> -->
+                        <!-- <dp-day-time-calendar [(ngModel)]="selectedInvoiceDate" [config]="config"></dp-day-time-calendar> -->
+                        <!-- </mat-form-field> -->
+                        <!-- <input type="text" class="form-control" placeholder="Enter your mobile number"> -->
+                    </div>
+                </div>
+                <div class="col-sm-2" *ngIf="isNEFTPayment">
+                    <div class="form-group">
+                        <label>NEFT Trans. Date</label>
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" formControlName="neft_payment_date">
+                        </my-date-picker>
+                        <!-- <input angular-mydatepicker name="mydate" [(ngModel)]="selectedInvoiceDate" [options]="myOptions" #dp="angular-mydatepicker" /> -->
+                        <!--   <mat-form-field class="example-full-width" appearance="fill"> -->
+                        <!-- <mat-label>Choose a date</mat-label> -->
+                        <!-- <dp-day-time-calendar [(ngModel)]="selectedInvoiceDate" [config]="config"></dp-day-time-calendar> -->
+                        <!-- </mat-form-field> -->
+                        <!-- <input type="text" class="form-control" placeholder="Enter your mobile number"> -->
+                    </div>
+                </div>
+                <div class="col-sm-3" *ngIf="isChequePayment">
+                    <div class="form-group">
+                        <label>Cheque Number</label>
+                        <input type="text" class="form-control" placeholder="Enter cheque number" formControlName="cheque_number">
+                    </div>
+                </div>
+
+                <div class="col-sm-3" *ngIf="isUPIPayment">
+                    <div class="form-group">
+                        <label>UPI Trans. Number</label>
+                        <input type="text" class="form-control" placeholder="Enter UPI trans. number" formControlName="upi_transaction_id">
+                    </div>
+                </div>
+                <div class="col-sm-3" *ngIf="isNEFTPayment">
+                    <div class="form-group">
+                        <label>NEFT Trans. Number</label>
+                        <input type="text" class="form-control" placeholder="Enter NEFT trans. number" formControlName="neft_transaction_number">
+                    </div>
+                </div>
+                <div class="col-sm-3" *ngIf="isNEFTPayment">
+                    <div class="form-group">
+                        <label>Select Payment Bank</label>
+                        <select class="form-control" (change)="onPaymentBankChange()" formControlName="company_bank_id">
+                                <option value="" hidden disabled>Select Payment Bank</option>
+                                <option value="{{companyBank.bank_id}}" *ngFor="let companyBank of companyBankDetails">
+                                    {{companyBank.bank_name}}-{{companyBank.account_number}}</option>
+                            </select>
+                        <!-- <label>State</label>
+                                                                                                                <input type="text" class="form-control" placeholder="Enter your state" formControlName="customer_state"> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="col-form-label">Search Customer</label>
+                        <input list="customers" formControlName="customer_id" type="text" id="searchedCustomers" (keypress)="searchCustomer($event)" placeholder="Enter Customer Name/Contact No." class="form-control" (change)="setCustomerDetails()">
+                        <datalist id="customers">
+                                <option *ngFor="let customer of searchedCustomers" [id]="customer.customer_id"
+                                    [value]="customer.customer_id_name">Contact:
+                                    {{customer.customer_mobile_no}}</option>
+                            </datalist>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="display:none;">
+                    <div class="card">
+                        <div class="card-header">
+                            Customer Details
+                            <button style="padding:0px;" class="btn btn-default" (click)="resetCustomerDetails()"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <ul class="list-group list-group-flush" *ngIf="(selectedCustomerObj | json) != '{}'">
+                            <li class="list-group-item">Id : <b>{{selectedCustomerObj.customer_id}}</b></li>
+                            <li class="list-group-item">Name : <b>{{selectedCustomerObj.customer_name}}</b></li>
+                            <li class="list-group-item">Mobile No. : <b>{{selectedCustomerObj.customer_mobile_no}}</b></li>
+                            <li class="list-group-item">Address : <b>{{selectedCustomerObj.customer_address}},{{selectedCustomerObj.customer_tahsil}},{{selectedCustomerObj.customer_district}},{{selectedCustomerObj.customer_pin_code}}</b></li>
+                            <li class="list-group-item">GST No. : <b>{{selectedCustomerObj.customer_gst_no}}</b></li>
+                            <li class="list-group-item">PAN No. : <b>{{selectedCustomerObj.customer_pan_no}}</b></li>
+                            <li class="list-group-item">Adhaar No. : <b>{{selectedCustomerObj.customer_adhaar_no}}</b></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4" *ngIf="isNEFTPayment" style="display:none;">
+                    <div class="card">
+                        <div class="card-header">
+                            Bank Details
+                            <button style="padding:0px;" class="btn btn-default" (click)="resetCustomerDetails()"><i
+                                        class="fa fa-refresh"></i></button>
+                        </div>
+                        <ul class="list-group list-group-flush" *ngIf="(selectedBankObj | json) != '{}'">
+                            <li class="list-group-item">Bank Name : <b>{{selectedBankObj.bank_name}}</b></li>
+                            <li class="list-group-item">Branch Name : <b>{{selectedBankObj.branch_name}}</b></li>
+                            <li class="list-group-item">Branch Address : <b>{{selectedBankObj.branch_address}}</b></li>
+                            <li class="list-group-item">Account No. :
+                                <b>{{selectedBankObj.account_number}}</b>
+                            </li>
+                            <li class="list-group-item">IFSC No. : <b>{{selectedBankObj.ifsc_code}}</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-sm-3 p-t-0">
+                    <mat-form-field>
+                        <mat-label>Select Product</mat-label>
+                        <mat-select [(ngModel)]="selectedProduct" [ngModelOptions]="{standalone: true}">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let product of productData" [value]="product.product_id">{{product.product_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3 p-t-0">
+                    <button class="btn btn-primary" type="button" (click)="addProductIntoCart()">
+                            <!-- <mat-icon>add_shopping_cart</mat-icon>  -->
+                            Add Product
+                        </button>
+                </div>
+                <div class="offset-sm-3 col-sm-3 p-t-0">
+                    <button type="button" mat-flat-button color="primary" (click)="exportInvoice()">
+                    <mat-icon>pageview</mat-icon> 
+                </button>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="3%">Action</th>
+                            <!-- <th width="5%" style="display: none;">No</th> -->
+                            <th width="12%">HSN/SAC</th>
+                            <th width="20%">Product/Item</th>
+                            <th width="25%">Quantity(In KGS.)</th>
+                            <!-- <th width="10%">Weight</th> -->
+                            <th width="25%">Rate (Per KGS.)</th>
+                            <th width="15%">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detail">
+                        <tr *ngFor="let selectedProduct of selectedProductList;let rowIndex= index;trackBy:trackByFn;">
+                            <td><button title="delete" class="btn btn-xs btn-danger" type="button" (click)="removeProduct(rowIndex)"><i class="fa fa-trash"></i></button></td>
+                            <td class="p-l-10">{{selectedProduct.hsn_or_sac_code}}</td>
+                            <td class="p-l-10">{{selectedProduct.product_name}}</td>
+                            <td class="p-l-10">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control input-sm text-right" style="float:left;width:70%;" (keyup)="updateProductCart($event,'quantity',rowIndex)" [id]="'quantity-'+rowIndex" name="'quantity-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.quantity" />
+                                        <select class="form-control" style="float:left;width:30%;" (change)="updateProductCart($event,'quantityPerUnit',rowIndex)" [(ngModel)]="selectedProduct.quantityPerUnit" [ngModelOptions]="{standalone: true}" [id]="'quantityPerUnit-'+rowIndex">
+                                         <option value=""></option>
+                                    <option value="Kgs.">Kgs.</option>
+                                    <option value="Gms.">Gms.</option>
+                                    <option value="Pcs.">Pcs.</option>
+                                </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td class="p-l-10"><input type="text" class="form-control input-sm text-right" (keyup)="updateProductCart($event,'weight',rowIndex)" [id]="'weight-'+rowIndex" name="'weight-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                                                        || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.weight" /></td> -->
+                            <td class="p-l-10 p-r-10">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control input-sm text-right" style="float:left;width:70%;" (keyup)="updateProductCart($event,'rate',rowIndex)" [id]="'rate-'+rowIndex" name="'rate-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.rate" />
+                                        <select class="form-control" style="float:left;width:30%;" (change)="updateProductCart($event,'ratePerUnit',rowIndex)" [id]="'ratePerUnit-'+rowIndex" [value]="selectedProduct.ratePerUnit">
+                                        <option value=""></option>
+                                    <option value="Kgs.">Kgs.</option>
+                                    <option value="Gms.">Gms.</option>
+                                    <option value="Pcs.">Pcs.</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td class="check_valid_quantity p-l-10 p-r-10">
+                                                        <input class="form-control text-right input-sm" type="text" (keyup)="updateItemCart($event,'making_charges',rowIndex)" [id]="'making_charges-'+rowIndex" name="'making_charges-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.making_charges">
+                                                    </td> -->
+                            <td class="p-l-10 p-r-10">
+                                <input class="form-control text-right input-sm" type="text" [value]="selectedProduct.total" [id]="'total-'+rowIndex" name="'total-'+rowIndex" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr class="hide_part_of_billing" style="display: table-row;">
+                            <th colspan="3" style="text-align: right;">Total Quantity</th>
+                            <th>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantity" class="form-control input-sm text-right" style="width:70%;float:left;" />
+                                        <select class="form-control" style="width:30%;float:left;" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantityUnit">
+                                            <option value=""></option>
+                                                <option value="Kgs.">Kgs.</option>
+                                    <option value="Gms.">Gms.</option>
+                                    <option value="Pcs.">Pcs.</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </th>
+                            <th style="text-align: right;">Total Amount (INR)</th>
+                            <th><b><input class="form-control text-right input-sm" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalSellingCost"
+                                            readonly></b></th>
+                        </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="4" style="text-align: right;">SGST (%)</th>
+                            <th style="text-align: right;"><b><input class="form-control align_pull text-right input-sm tax_amount"
+                                            type="text" name="sgst" [(ngModel)]="sgst" [ngModelOptions]="{standalone: true}" value="0"
+                                            (keyup)="calculateTaxableAmount('sgst')"
+                                            onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))"></b></th>
+                            <th style="text-align: center;" class=""><b><input
+                                            class="form-control align_pull text-right input-sm tax_amount" type="text"
+                                            name="sgst_amount" [(ngModel)]="sgst_amount" [ngModelOptions]="{standalone: true}" value="0" readonly></b></th>
+                        </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="4" style="text-align: right;">CGST (%)</th>
+                            <th style="text-align: right;"><b><input class="form-control align_pull text-right input-sm tax_amount"
+                                            type="text" name="cgst" value="0" [(ngModel)]="cgst" [ngModelOptions]="{standalone: true}"
+                                            (keyup)="calculateTaxableAmount('cgst')"
+                                            onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))"></b></th>
+                            <th style="text-align: center;" class=""><b><input
+                                            class="form-control align_pull text-right input-sm tax_amount" type="text"
+                                            name="cgst_amount" [(ngModel)]="cgst_amount" [ngModelOptions]="{standalone: true}" value="0" readonly></b></th>
+                        </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="4" style="text-align: right;">IGST (%)</th>
+                            <th style="text-align: right;"><b><input class="form-control align_pull text-right input-sm tax_amount"
+                                            type="text" name="igst" value="0" [(ngModel)]="igst" [ngModelOptions]="{standalone: true}"
+                                            (keyup)="calculateTaxableAmount('igst')"
+                                            onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))"></b></th>
+                            <th style="text-align: center;" class=""><b><input
+                                            class="form-control align_pull text-right input-sm tax_amount" type="text"
+                                            name="igst_amount" [(ngModel)]="igst_amount" [ngModelOptions]="{standalone: true}" value="0" readonly></b></th>
+                        </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="5" style="text-align: right;">Total Amount (INR)</th>
+                            <th style="text-align: center;" class=""><b><input
+                                            class="form-control align_pull text-right input-sm total" type="text"
+                                            name="totalTaxableSellingAmount" [(ngModel)]="totalTaxableSellingAmount" [ngModelOptions]="{standalone: true}" value="0"
+                                            disabled></b></th>
+                        </tr>
+                        <!-- <tr class="hide_part_of_billing" style="display: table-row;">
+                				<th colspan="7" style="text-align: right;">Tax (%)</th>
+                                <th style="text-align: right;" class=""><b><input class="form-control align_pull text-center input-sm paid_amount" type="text" name="paid_amount" value="0">
+                                </b></th>
+                			</tr>
+                			<tr class="hide_part_of_billing" style="display: table-row;">
+                				<th colspan="7" style="text-align: right;">Taxable Amount (INR)</th>
+                				<th style="text-align: right;" class=""><b><input class="form-control align_pull text-center input-sm balance" type="text" name="balance" value="0" disabled=""></b></th>
+                			</tr> -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" style="margin-top:15px;">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary" color="primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- </div> -->
+<!--/.col-->
+<!-- </div> -->
+<!--/.row-->
+<!-- </div> -->

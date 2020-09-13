@@ -7,104 +7,104 @@
                     <!-- <small>Details</small> -->
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>{{'lable_translate.owner_name' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your name">
+                    <form [formGroup]="ownerDetailsForm" (ngSubmit)="saveCompanyOwnerDetails()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.owner_name' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter your name" formControlName="owner_name">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>{{'lable_translate.street' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter street address">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.street' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter street address" formControlName="street_address">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-8">
-                            <label>{{'lable_translate.city' | translate}}</label>
-                            <input type="text" class="form-control" placeholder="Enter your city">
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label>{{'lable_translate.postal_code' | translate}}</label>
-                            <input type="text" class="form-control" placeholder="Postal Code">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.taluka' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your taluka">
+                        <div class="row">
+                            <div class="form-group col-sm-8">
+                                <label>{{'lable_translate.city' | translate}}</label>
+                                <input type="text" class="form-control" placeholder="Enter your city" formControlName="city_name">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>{{'lable_translate.postal_code' | translate}}</label>
+                                <input type="text" class="form-control" placeholder="Postal Code" formControlName="pin_code">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.district' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your district">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.taluka' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter your taluka" formControlName="tahsil_name">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.district' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter your district" formControlName="district_name">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.state' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your state">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.state' | translate}}</label>
+                                    <select class="form-control" id="state_id" formControlName="state_id">
+                                        <option value="" hidden disabled>Select State</option>
+                                        <option value="1">Maharashatra</option>
+                                        <option value="2">Karnataka</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.country' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your country">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.phone_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter your phone number" formControlName="phone_no">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>{{'lable_translate.phone_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your phone number">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.mobile_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter your mobile number" formControlName="mobile_no">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.alt_mobile_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter alternate mobile number" formControlName="alt_mobile_no">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.mobile_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter your mobile number">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.adhaar_card_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" formControlName="adhaar_card_no">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.pan_card_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" formControlName="pan_card_no">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.alt_mobile_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter alternate mobile number">
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align: center">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">{{'lable_translate.save_owner_details' | translate}}</button>
+                                    <!-- <button type="button" class="btn btn-secondary">Reset</button> -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.adhaar_card_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.pan_card_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align: center">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary">{{'lable_translate.save_owner_details' | translate}}</button>
-                                <!-- <button type="button" class="btn btn-secondary">Reset</button> -->
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                     <!--/.row-->
 
                     <!--/.row-->
@@ -162,110 +162,124 @@
                     <!-- <small>Details</small> -->
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>{{'lable_translate.company_name' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter company name">
+                    <form [formGroup]="companyDetailsForm" (ngSubmit)="saveCompanyDetails()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.company_name' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter company name" formControlName="company_name" readonly>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.gst_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.gst_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" formControlName="company_gst_no">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.pan_card_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" formControlName="company_pan_no">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.pan_card_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.street' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter company address" formControlName="street_address">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>{{'lable_translate.street' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter company address">
+                        <div class="row">
+                            <div class="form-group col-sm-8">
+                                <label>{{'lable_translate.city' | translate}}</label>
+                                <input type="text" class="form-control" placeholder="Enter city" formControlName="city_name">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>{{'lable_translate.postal_code' | translate}}</label>
+                                <input type="text" class="form-control" placeholder="Postal Code" formControlName="pin_code">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-8">
-                            <label>{{'lable_translate.city' | translate}}</label>
-                            <input type="text" class="form-control" placeholder="Enter city">
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <label>{{'lable_translate.postal_code' | translate}}</label>
-                            <input type="text" class="form-control" placeholder="Postal Code">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.taluka' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter taluka">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.taluka' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter taluka" formControlName="tahsil_name">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.district' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter district" formControlName="district_name">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.district' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter district">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.state' | translate}}</label>
+                                    <select class="form-control" id="state_id" formControlName="state_id">
+                                        <option value="" hidden disabled>Select State</option>
+                                        <option value="1">Maharashatra</option>
+                                        <option value="2">Karnataka</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.state' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter state">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
+                            <!-- <div class="col-sm-6">
                             <div class="form-group">
                                 <label>{{'lable_translate.country' | translate}}</label>
                                 <input type="text" class="form-control" placeholder="Enter country">
                             </div>
+                        </div> -->
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.state_code' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter state code">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.state_code' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter state code" formControlName="state_code">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.phone_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter phone number" formControlName="phone_no">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.phone_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter phone number">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.mobile_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter mobile number" formControlName="mobile_no">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.alt_mobile_number' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter alternate mobile number" formControlName="alt_mobile_no">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.mobile_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter mobile number">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{'lable_translate.company_tagline' | translate}}</label>
+                                    <input type="text" class="form-control" placeholder="Enter company tag line" formControlName="company_tagline">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{'lable_translate.alt_mobile_number' | translate}}</label>
-                                <input type="text" class="form-control" placeholder="Enter alternate mobile number">
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align: center">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">{{'lable_translate.save_company_details' | translate}}</button>
+                                    <!-- <button type="button" class="btn btn-secondary">Reset</button> -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align: center">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary">{{'lable_translate.save_company_details' | translate}}</button>
-                                <!-- <button type="button" class="btn btn-secondary">Reset</button> -->
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

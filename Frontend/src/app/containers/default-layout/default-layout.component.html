@@ -1,4 +1,4 @@
-<app-header [navbarBrandRouterLink]="['/dashboard']" [fixed]="true" [navbarBrandFull]="{src: 'assets/img/brand/logo.svg', width: 89, height: 25, alt: 'CoreUI Logo'}" [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'CoreUI Logo'}"
+<app-header [navbarBrandRouterLink]="['/dashboard']" [fixed]="true" [navbarBrandFull]="{src: 'assets/img/brand/onlinelogomaker-080620-1047-1141.png', width: 180, height: 40, alt: 'CoreUI Logo'}" [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'CoreUI Logo'}"
     [sidebarToggler]="'lg'" [asideMenuToggler]="false">
     <!-- <ul class="nav navbar-nav d-md-down-none">
          <li class="nav-item px-3">
@@ -74,7 +74,10 @@
         <!--</li>-->
         <!--</ol>-->
         <div class="container-fluid" style="margin-top:20px;">
-            <router-outlet></router-outlet>
+
+            <router-outlet>
+                <ngx-ui-loader></ngx-ui-loader>
+            </router-outlet>
         </div>
         <!-- /.container-fluid -->
     </main>
