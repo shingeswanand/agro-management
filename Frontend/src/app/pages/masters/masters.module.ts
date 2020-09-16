@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MastersRoutingModule } from './masters-routing.module';
 import { ProductMasterComponent } from './product-master/product-master.component';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { BankMasterComponent } from './bank-master/bank-master.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -21,7 +20,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 		FormsModule,
 		ModalModule.forRoot(),
 		MastersRoutingModule,
-		Ng2SmartTableModule,
 		MatTableModule,
 		MatPaginatorModule,
 		MatButtonModule,

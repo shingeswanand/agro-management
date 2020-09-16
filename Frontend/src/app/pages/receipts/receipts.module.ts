@@ -40,7 +40,8 @@ import { NumberToWordsPipe } from '../receipts/sale-invoice/number-to-words.pipe
 		CashMemoListingComponent,
 		MakeCashMemoComponent,
 		SaleInvoiceComponent,
-		SaleInvoiceListingComponent
+		SaleInvoiceListingComponent,
+		NumberToWordsPipe
 	],
 	imports: [
 		CommonModule,

@@ -1,1 +1,123 @@
-<ng2-smart-table [settings]="settings"></ng2-smart-table>
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header text-white bg-info">
+                    <strong>Product Master</strong>
+                    <!-- <button type="button" class="btn btn-success btn-sm" style="float: right;" (click)="add_customer()"><i
+                            class="icon-emotsmile icons"></i>&nbsp;<strong>{{'lable_translate.add_customer' | translate}}</strong></button> -->
+                </div>
+                <!-- <div class="card-body"> -->
+                <div class="mat-elevation-z8">
+                    <div class="row mr-0 ml-0">
+                        <div class="col-md-6" style="margin-top: 10px;">
+                            <mat-form-field fxFlex="40%">
+                                <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="text-align: right;margin-top: 15px;">
+                            <button mat-flat-button color="primary" data-toggle="modal" (click)="addProduct()">Add
+                                Product</button>
+                        </div>
+                    </div>
+                    <table class="mat-elevation-z8" mat-table [dataSource]="dataSource">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="ID">
+                            <th mat-header-cell *matHeaderCellDef> No. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.product_id}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="Name">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.product_name}} </td>
+                        </ng-container>
+
+                        <!-- Weight Column -->
+                        <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef> Description </th>
+                            <td mat-cell *matCellDef="let element"> {{element.product_description}} </td>
+                        </ng-container>
+
+                        <!-- Symbol Column -->
+                        <ng-container matColumnDef="HSN">
+                            <th mat-header-cell *matHeaderCellDef> HSN Code </th>
+                            <td mat-cell *matCellDef="let element"> {{element.hsn_or_sac_code}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Action">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button class="btn btn-primary" style="border-radius: 50%;" (click)="editProduct(element.product_id)">
+                                    <i class="fa fa-edit" style="width:10px;"></i>
+                                    <!-- <mat-icon>delete</mat-icon> -->
+                                </button>
+                                <!-- <button class="btn btn-danger" style="border-radius: 50%;" (click)="deleteProduct(element.product_id)">
+                                    <i class="fa fa-trash"></i>
+                                </button> -->
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+
+                    <!-- <mat-paginator [pageSize]="2" [pageSizeOptions]="[2, 4, 6, 10, 20]">
+                    </mat-paginator> -->
+                    <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+</div>
+
+
+<div bsModal #primaryModal="bs-modal" class="modal fade" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Product Details</h4>
+                <button type="button" class="close" (click)="primaryModal.hide();resetProductDetails()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="productFormDetails" (ngSubmit)="submit_product_details()">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Product Name</label>
+                                <input type="text" class="form-control" placeholder="Enter product name" formControlName="product_name">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Product Description</label>
+                                <input type="text" class="form-control" placeholder="Enter product description" formControlName="product_description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>HSN/SAC Code</label>
+                                <input type="text" class="form-control" placeholder="Enter HSN or SAC Code" formControlName="hsn_or_sac_code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="primaryModal.hide();resetProductDetails()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

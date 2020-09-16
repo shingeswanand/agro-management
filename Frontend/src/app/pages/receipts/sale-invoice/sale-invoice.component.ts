@@ -1150,13 +1150,13 @@ export class SaleInvoiceComponent implements OnInit {
 		doc.text('Bank Details', 26, 267);
 		doc.line(25, 269, 110, 269);
 		doc.text('Bank Name :', 26, 273);
-		doc.text(''+this.selectedBankObj.bank_name, 50, 273);
+		doc.text(''+this.selectedBankObj.bank_name, 52, 273);
 		doc.text('Account No. :', 26, 278);
-		doc.text(''+this.selectedBankObj.account_number, 50, 278);
+		doc.text(''+this.selectedBankObj.account_number, 52, 278);
 		doc.text('Branch Name :', 26, 283);
-		doc.text(''+this.selectedBankObj.branch_name, 50, 283);
+		doc.text(''+this.selectedBankObj.branch_name, 52, 283);
 		doc.text('IFSC Code :', 26, 289);
-		doc.text(''+this.selectedBankObj.ifsc_code, 50, 289);
+		doc.text(''+this.selectedBankObj.ifsc_code, 52, 289);
 		}
 		doc.text('For '+this.companyDetails.company_name, 150, 273, 'center');
 		doc.setFontStyle('normal');

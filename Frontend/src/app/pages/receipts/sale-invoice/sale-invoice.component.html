@@ -6,7 +6,7 @@
         <strong>Sale Invoice</strong>
     </div>
     <div class="card-body">
-        <form [formGroup]="saleDetailsForm" (ngSubmit)="submitSaleInvoice()">
+        <form [formGroup]="saleDetailsForm" (ngSubmit)="submitSaleInvoice()" autocomplete="false">
             <div class="row">
                 <div class="col-sm-2">
                     <div class="form-group">
@@ -148,7 +148,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="col-form-label">Search Customer</label>
-                        <input list="customers" formControlName="customer_id" type="text" id="searchedCustomers" (keypress)="searchCustomer($event)" placeholder="Enter Customer Name/Contact No." class="form-control" (change)="setCustomerDetails()">
+                        <input list="customers" autocomplete="off" formControlName="customer_id" type="text" id="searchedCustomers" (keypress)="searchCustomer($event)" placeholder="Enter Customer Name/Contact No." class="form-control" (change)="setCustomerDetails()">
                         <datalist id="customers">
                                 <option *ngFor="let customer of searchedCustomers" [id]="customer.customer_id"
                                     [value]="customer.customer_id_name">Contact:
