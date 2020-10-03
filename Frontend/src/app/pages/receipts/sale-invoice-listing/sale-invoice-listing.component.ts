@@ -12,7 +12,8 @@ import { SaleInvoiceService } from '../../../services/sale-invoice/sale-invoice.
 	styleUrls: [ './sale-invoice-listing.component.css' ]
 })
 export class SaleInvoiceListingComponent implements OnInit {
-	displayedColumns: string[] = [ 'ID', 'Invoice No.', 'Invoice Date', 'Customer Name', 'Action' ];
+	displayedColumns: string[] = [ 'ID', 'Invoice No.', 'Invoice Date', 'Customer Name','Status','Action' ];
+	status:string[]=['','Pending','Payment Done & Delivery InProgress','Payment Pending & Product Delivered','Payment Pending & Delivery InProgress','Completed'];
 	length: any;
 	pageSize: any = 5;
 	ds: any = [];

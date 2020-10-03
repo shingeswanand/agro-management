@@ -22,7 +22,7 @@ export const navItems: INavData[] = [
 	{
 		name: 'Employees',
 		url: '/employee_listing',
-		icon: 'icon-people'
+		icon: 'icon-lock'
 	},
 	{
 		name: 'Customers',
@@ -32,7 +32,7 @@ export const navItems: INavData[] = [
 	{
 		name: 'Suppliers',
 		url: '/supplier_listing',
-		icon: 'icon-social-skype'
+		icon: 'icon-lock'
 	},
 	{
 		name: 'Invoices',
@@ -71,7 +71,7 @@ export const navItems: INavData[] = [
 	{
 		name: 'Stock',
 		url: '/stocks',
-		icon: 'icon-puzzle',
+		icon: 'icon-lock',
 		children: [
 			{
 				name: 'Raw Cashew',

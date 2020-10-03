@@ -156,6 +156,19 @@
                             </datalist>
                     </div>
                 </div>
+                <div class="col-sm-4">
+                    <div class="form-group" style="margin-top:8px;">
+                        <label>Select Status</label>
+                        <select class="form-control" formControlName="status">
+                                <option value="" hidden disabled>Select Status</option>
+                                <option value="1">Pending</option>
+                                <option value="2">Payment Done & Delivery InProgress</option>
+                                <option value="3">Payment Pending & Product Delivered</option>
+                                <option value="4">Payment Pending & Delivery InProgress</option>
+                                <option value="5">Completed</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-sm-4" style="display:none;">
                     <div class="card">
                         <div class="card-header">
@@ -193,7 +206,7 @@
                 </div>
             </div>
             <div class="row" style="margin-top:10px;">
-                <div class="col-sm-3 p-t-0">
+                <div class="col-sm-3">
                     <mat-form-field>
                         <mat-label>Select Product</mat-label>
                         <mat-select [(ngModel)]="selectedProduct" [ngModelOptions]="{standalone: true}">
@@ -203,19 +216,27 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-sm-3 p-t-0">
+                <div class="col-sm-3" style="padding:10px;">
                     <button class="btn btn-primary" type="button" (click)="addProductIntoCart()">
                             <!-- <mat-icon>add_shopping_cart</mat-icon>  -->
                             Add Product
                         </button>
                 </div>
-                <div class="offset-sm-3 col-sm-3 p-t-0">
-                    <button type="button" mat-flat-button color="primary" (click)="exportInvoice()">
-                    <mat-icon>pageview</mat-icon> 
+                <div class="col-sm-6 ml-auto mr-auto" style="padding:10px;">
+                    <button type="button" class="btn btn-primary" title="Print Or View" color="primary" (click)="exportInvoice('open')">
+                    <!-- <mat-icon>pageview</mat-icon>  -->
+                    <i class="fa fa-print"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Download As PDF" color="primary" (click)="exportInvoice('download')">
+                    <!-- <mat-icon>pageview</mat-icon>  -->
+                    <i class="fa fa-file-pdf-o"></i>
+                </button>
+                <button type="button" class="btn btn-primary" title="Back to invoice list" color="primary" [routerLink]="['/receipts/sale_invoice_listing']">
+                    Invoice Listing
                 </button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top:10px;overflow: auto;">
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>

@@ -1,26 +1,26 @@
 <div class="animated fadeIn">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="card">
-                <div class="card-header text-white bg-info">
-                    <strong>Product Master</strong>
-                    <!-- <button type="button" class="btn btn-success btn-sm" style="float: right;" (click)="add_customer()"><i
-                            class="icon-emotsmile icons"></i>&nbsp;<strong>{{'lable_translate.add_customer' | translate}}</strong></button> -->
+                <div class="card-header text-white bg-info" style="padding-top:10px;">
+                    <h3 class="mr-auto float-left font-weight-bold" style="margin: 0px;">Product Master</h3>
+                    <button class="ml-auto float-right" mat-flat-button color="primary" data-toggle="modal" (click)="addProduct()">Add
+                        Product</button>
                 </div>
                 <!-- <div class="card-body"> -->
-                <div class="mat-elevation-z8">
+                <div class="mat-elevation-z6" style="overflow: auto;">
                     <div class="row mr-0 ml-0">
                         <div class="col-md-6" style="margin-top: 10px;">
                             <mat-form-field fxFlex="40%">
                                 <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search">
                             </mat-form-field>
                         </div>
-                        <div class="col-md-6" style="text-align: right;margin-top: 15px;">
+                        <!-- <div class="col-md-6" style="margin-top: 15px;float:right;">
                             <button mat-flat-button color="primary" data-toggle="modal" (click)="addProduct()">Add
                                 Product</button>
-                        </div>
+                        </div> -->
                     </div>
-                    <table class="mat-elevation-z8" mat-table [dataSource]="dataSource">
+                    <table class="mat-elevation-z8" mat-table [dataSource]="dataSource" style="width:98%;margin-left: auto;margin-right: auto;border-collapse: inherit;">
                         <!-- Position Column -->
                         <ng-container matColumnDef="ID">
                             <th mat-header-cell *matHeaderCellDef> No. </th>
@@ -76,7 +76,7 @@
 
 
 <div bsModal #primaryModal="bs-modal" class="modal fade" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-dialog modal-primary modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Product Details</h4>
@@ -95,16 +95,17 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Product Description</label>
-                                <input type="text" class="form-control" placeholder="Enter product description" formControlName="product_description">
+                                <label>HSN/SAC Code</label>
+                                <input type="text" class="form-control" placeholder="Enter HSN or SAC Code" formControlName="hsn_or_sac_code">
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label>HSN/SAC Code</label>
-                                <input type="text" class="form-control" placeholder="Enter HSN or SAC Code" formControlName="hsn_or_sac_code">
+                                <label>Product Description</label>
+                                <textarea rows="3" class="form-control" placeholder="Enter product description" formControlName="product_description">
+                                    </textarea>
                             </div>
                         </div>
                     </div>

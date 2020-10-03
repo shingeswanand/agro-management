@@ -21,10 +21,10 @@
         <li class="nav-item d-md-down-none">
             <a class="nav-link" href="#"><i class="icon-location-pin"></i></a>
         </li> -->
-        <select #langSelect (change)="translate.use(langSelect.value);changeLang(langSelect.value)">  
+        <!-- <select #langSelect (change)="translate.use(langSelect.value);changeLang(langSelect.value)">  
                 <option *ngFor="let lang of translate.getLangs()" [value]="lang" [selected]="lang === translate.currentLang">{{ lang }}  
                 </option>  
-           </select>
+           </select> -->
         <li class="nav-item dropdown" dropdown placement="bottom right">
             <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
                 <!-- <img src="assets/img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com" /> -->
@@ -32,10 +32,10 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
                 <div class="dropdown-header text-center"><strong>Settings</strong></div>
-                <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
+                <!-- <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
                 <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Setting</a>
                 <div class="divider"></div>
-                <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock account</a>
+                <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock account</a> -->
                 <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
             </div>
         </li>

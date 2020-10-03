@@ -12,6 +12,7 @@ import { $ } from 'protractor';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as jsPDF from 'jspdf';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ToastrService } from 'ngx-toastr';
 
 // import * as autoTable from 'jspdf-autotable';
 
@@ -24,6 +25,7 @@ import { NumberToWordsPipe } from '../sale-invoice/number-to-words.pipe';
 })
 export class SaleInvoiceComponent implements OnInit {
 	saleDetailsForm: FormGroup;
+	status: string = 'Pending';
 	public myDatePickerOptions: IMyDpOptions = {
 		// other options...
 		dateFormat: 'dd.mm.yyyy'
@@ -62,7 +64,8 @@ export class SaleInvoiceComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private numberToWordsPipe: NumberToWordsPipe,
-		private ngxLoader: NgxUiLoaderService
+		private ngxLoader: NgxUiLoaderService,
+		private toastrService:ToastrService
 	) {}
 
 	ngOnInit() {
@@ -83,7 +86,8 @@ export class SaleInvoiceComponent implements OnInit {
 			cheque_number: [ '' ],
 			upi_payment_date: [ null ],
 			upi_transaction_id: [ '' ],
-			customer_id: [ '' ]
+			customer_id: [ '' ],
+			status:['1']
 		});
 
 		if (this.route.snapshot.paramMap.get('invoice_no') != null) {
@@ -114,7 +118,10 @@ export class SaleInvoiceComponent implements OnInit {
 				this.ngxLoader.stop();
 				this.productData = data;
 			},
-			(error) => {}
+			(error) => {
+				this.toastrService.error(error.error.message, 'Error!');
+					this.ngxLoader.stop();
+			}
 		);
 	}
 	selectedProduct: any;
@@ -242,7 +249,10 @@ export class SaleInvoiceComponent implements OnInit {
 					this.ngxLoader.stop();
 					this.searchedCustomers = data;
 				},
-				(error) => {}
+				(error) => {
+					this.toastrService.error(error.error.message, 'Error!');
+					this.ngxLoader.stop();
+				}
 			);
 		}
 	}
@@ -340,8 +350,8 @@ export class SaleInvoiceComponent implements OnInit {
 				// this.ngxLoader.stop();
 			},
 			(error) => {
-				//	this.toastrService.error(error.error.message, 'Error!');
-				// this.ngxLoader.stop();
+					this.toastrService.error(error.error.message, 'Error!');
+				this.ngxLoader.stop();
 			}
 		);
 	}
@@ -357,512 +367,10 @@ export class SaleInvoiceComponent implements OnInit {
 		{ sr_no: '', hsn_or_sac_code: '', product_name: '', quantity: '', rate: '', amount: '' },
 		{ sr_no: '1', hsn_or_sac_code: '123', product_name: 'W Mix', quantity: '210', rate: '20', amount: '2540' }
 	];
-	showInvoiceDetails() {
-		var bodyData = [];
-
-		var dataHead = [];
-		dataHead.push({ text: 'Sr. No.', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'HSN/SAC', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'Particulars', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'Quantity', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'Rate', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'Rate Per', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-		dataHead.push({ text: 'Amount', style: 'tableHeader', bold: true, fontSize: 9, alignment: 'center' });
-
-		bodyData.push(dataHead);
-
-		for (var i = 0; i < this.selectedProductList.length; i++) {
-			var dataRow = [];
-
-			// var process_test_name: any = this.selectedProductList[i].process_test_name;
-			// var product_quantity: any = this.selectedProductList[i].product_quantity;
-			// var total_amount_for_process: any = this.selectedProductList[i].total_amount_for_process;
-
-			dataRow.push({ text: '' + i, style: 'tableHeader', fontSize: 9, alignment: 'left' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-			dataRow.push({ text: 'hsn', style: 'tableHeader', fontSize: 9, alignment: 'center' });
-
-			bodyData.push(bodyData);
-		}
-
-		let action = 'open';
-		let docDefinition = {
-			content: [
-				{
-					text: 'Tax Invoice',
-					fontSize: 16,
-					alignment: 'center',
-					color: '#047886',
-					decoration: 'underline'
-				},
-				{
-					text: '' + this.companyDetails.company_name,
-					fontSize: 20,
-					bold: true,
-					alignment: 'center',
-					color: 'skyblue'
-				},
-				{
-					text:
-						'' +
-						this.companyDetails.street_address +
-						',' +
-						this.companyDetails.city_name +
-						' At/Post/Tal. ' +
-						this.companyDetails.tahsil_name +
-						',Dist-' +
-						this.companyDetails.district_name +
-						'-' +
-						this.companyDetails.pin_code,
-					fontSize: 12,
-					bold: false,
-					alignment: 'center',
-					color: 'skyblue'
-				},
-				{
-					text: 'Email : gawadesubhash532@gmail.com',
-					fontSize: 12,
-					bold: false,
-					alignment: 'center',
-					color: 'skyblue'
-				},
-				{
-					text: 'Mob.No. ' + this.companyDetails.mobile_number,
-					fontSize: 12,
-					bold: false,
-					alignment: 'center',
-					color: 'skyblue'
-				},
-				// {
-				// 	columns: [
-				// 		[
-				// 			{
-				// 				text: 'Nagraj',
-				// 				bold: true
-				// 			},
-				// 			{ text: 'Radhanagari' },
-				// 			{ text: 'Something' },
-				// 			{ text: 'something' }
-				// 		],
-				// 		[
-				// 			{
-				// 				text: `Date: ${new Date().toLocaleString()}`,
-				// 				alignment: 'right'
-				// 			},
-				// 			{
-				// 				text: `Bill No : ${(Math.random() * 1000).toFixed(0)}`,
-				// 				alignment: 'right'
-				// 			}
-				// 		]
-				// 	]
-				// },
-				// {
-				// 	text: 'Order Details',
-				// 	style: 'sectionHeader'
-				// },
-				{
-					table: {
-						margin: [ 0, 20, 50, 0 ],
-						layout: 'lightHorizontalLines',
-						headerRows: 2,
-						widths: [ '*', '*', '*', '*' ],
-						body: [
-							[
-								'Company GSTIN',
-								'' + this.companyDetails.company_gst_no,
-								'Company PAN No.',
-								'' + this.companyDetails.company_pan_no
-							],
-							[
-								{
-									colSpan: 2,
-									text: 'TO,',
-									border: [ true, false, false, false ]
-								},
-								'',
-								'Invoice No.',
-								'' + this.saleDetailsForm.controls['invoice_no'].value
-							],
-							[
-								{
-									colSpan: 2,
-									text: '' + this.selectedCustomerObj.customer_name + ',',
-									border: [ true, false, false, false ]
-								},
-								'',
-								'EWay Bill No.',
-								'' + this.saleDetailsForm.controls['eWayBillNumber'].value
-							],
-							[
-								{
-									colSpan: 2,
-									text:
-										'' +
-										this.selectedCustomerObj.customer_address +
-										' ' +
-										this.selectedCustomerObj.customer_tahsil,
-									border: [ true, false, false, false ]
-								},
-								'',
-								'Date Of Issue',
-								''
-							],
-							[
-								{
-									colSpan: 2,
-									text:
-										'Dist-' +
-										this.selectedCustomerObj.customer_district +
-										'-' +
-										this.selectedCustomerObj.customer_pin_code,
-									border: [ true, false, false, false ]
-								},
-								'',
-								'Dispatch Through',
-								'' + this.saleDetailsForm.controls['dispatch_through'].value
-							],
-							[
-								{
-									colSpan: 2,
-									text: 'Mob. No. ' + this.selectedCustomerObj.customer_mobile_no,
-									border: [ true, false, false, false ]
-								},
-								'',
-								'Vehicle No.',
-								'' + this.saleDetailsForm.controls['vehicle_number'].value
-							],
-							[
-								{ text: 'Customer GSTIN', border: [ true, true, true, false ] },
-								{
-									text: '' + this.selectedCustomerObj.customer_gst_no,
-									border: [ true, true, true, false ]
-								},
-								{ text: 'Delivery Note', border: [ true, true, true, false ] },
-								{ text: '', border: [ true, true, true, false ] }
-							]
-							// ...this.invoice.products.map((p) => [
-							// 	p.name,
-							// 	p.price,
-							// 	p.qty,
-							// 	(p.price * p.qty).toFixed(2)
-							// ]),
-							// [
-							// 	{ text: 'Total Amount', colSpan: 3 },
-							// 	{},
-							// 	{},
-							// 	this.invoice.products.reduce((sum, p) => sum + p.qty * p.price, 0).toFixed(2)
-							// ]
-						]
-					}
-				},
-				{
-					layout: 'noBorders',
-					table: {
-						headerRows: 1,
-						widths: [ 35, 55, '*', 50, 50, 30, 60 ],
-						body: [
-							// bodyData,
-							[ 'Sr.No.', 'HSN/SAC', 'Particulars', 'Quantity', 'Rate', 'Per', 'Amount' ],
-							...this.selectedProductList.map((p) => [
-								'',
-								p.hsn_or_sac_code,
-								p.product_name,
-								p.quantity + ' ' + p.quantityPerUnit,
-								p.rate,
-								'',
-								''
-							]),
-							[
-								{},
-								{},
-								{ text: 'Total', border: [ true, true, true, true ] },
-								{
-									text: '' + this.totalQuantity + '' + this.totalQuantityUnit,
-									border: [ true, true, true, true ]
-								},
-								{},
-								{},
-								{ text: '' + this.totalSellingCost, border: [ true, true, true, true ] }
-							],
-							[
-								{},
-								{},
-								{ text: 'Output CGST ' + this.cgst + ' %', border: [ true, true, true, true ] },
-								{ text: '', border: [ true, true, true, true ] },
-								{},
-								{},
-								{ text: '' + this.cgst_amount, border: [ true, true, true, true ] }
-							],
-							[
-								{},
-								{},
-								{ text: 'Output SGST ' + this.sgst + ' %', border: [ true, true, true, true ] },
-								{ text: '', border: [ true, true, true, true ] },
-								{},
-								{},
-								{ text: '' + this.sgst_amount, border: [ true, true, true, true ] }
-							],
-							[
-								{},
-								{},
-								{ text: 'Output IGST ' + this.igst + ' %', border: [ true, true, true, true ] },
-								{ text: '', border: [ true, true, true, true ] },
-								{},
-								{},
-								{ text: '' + this.igst_amount, border: [ true, true, true, true ] }
-							],
-							[
-								{},
-								{},
-								{ text: 'Round Off', border: [ true, true, true, true ] },
-								{ text: '', border: [ true, true, true, true ] },
-								{},
-								{},
-								{ text: '', border: [ true, true, true, true ] }
-							],
-							[
-								{},
-								{},
-								{ text: 'Grand Total', border: [ true, true, true, true ] },
-								{ text: '', border: [ true, true, true, true ] },
-								{},
-								{},
-								{ text: '' + this.totalTaxableSellingAmount, border: [ true, true, true, true ] }
-							],
-							[
-								{
-									text: 'Amount in words :',
-									colSpan: 7,
-									fontSize: 11,
-									bold: true,
-									border: [ true, true, true, false ]
-								},
-								{},
-								{},
-								{},
-								{},
-								{},
-								{}
-							],
-							[
-								{
-									text: '' + this.numberToWordsPipe.transform(this.totalTaxableSellingAmount),
-									colSpan: 7,
-									fontSize: 11,
-									border: [ true, false, true, true ]
-								},
-								{},
-								{},
-								{},
-								{},
-								{},
-								{}
-							],
-							[
-								{
-									text: 'Declaration :',
-									colSpan: 7,
-									fontSize: 11,
-									bold: true,
-									border: [ true, true, true, false ]
-								},
-								{},
-								{},
-								{},
-								{},
-								{},
-								{}
-							],
-							[
-								{
-									text:
-										'We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.',
-									colSpan: 7,
-									fontSize: 11,
-									border: [ true, false, true, true ]
-								},
-								{},
-								{},
-								{},
-								{},
-								{},
-								{}
-							],
-							[
-								{
-									text: 'Company Bank Details :',
-									colSpan: 3,
-									bold: true,
-									fontSize: 12
-								},
-								{},
-								{},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								}
-							],
-							[
-								{
-									text: 'Bank Name :',
-									colSpan: 2,
-									bold: true,
-									fontSize: 11
-								},
-								{},
-								{
-									text: '' + this.selectedBankObj.bank_name,
-									bold: true,
-									fontSize: 11
-								},
-								{
-									text: 'For ' + this.companyDetails.company_name,
-									colSpan: 4,
-									alignment: 'center',
-									bold: true,
-									fontSize: 12,
-									border: [ false, false, true, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								}
-							],
-							[
-								{
-									text: 'Account No. :',
-									colSpan: 2,
-									bold: true,
-									fontSize: 11
-								},
-								{},
-								{
-									text: '' + this.selectedBankObj.account_number,
-									bold: true,
-									fontSize: 11
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								}
-							],
-							[
-								{
-									text: 'Branch Name :',
-									colSpan: 2,
-									bold: true,
-									fontSize: 11
-								},
-								{},
-								{
-									text: '' + this.selectedBankObj.branch_name,
-									bold: true,
-									fontSize: 11
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, false, false ]
-								},
-								{
-									text: '',
-									border: [ false, false, true, false ]
-								}
-							],
-							[
-								{
-									text: 'IFSC Code :',
-									colSpan: 2,
-									bold: true,
-									fontSize: 11
-								},
-								{},
-								{
-									text: '' + this.selectedBankObj.ifsc_code,
-									bold: true,
-									fontSize: 11
-								},
-								{
-									text: 'Authorized Signature',
-									colSpan: 4,
-									fontSize: 11,
-									alignment: 'center',
-									border: [ false, false, true, true ]
-								},
-								{},
-								{},
-								{}
-							]
-						]
-					}
-				}
-			],
-			styles: {
-				sectionHeader: {
-					bold: true,
-					decoration: 'underline',
-					fontSize: 14,
-					margin: [ 0, 15, 0, 15 ]
-				}
-			}
-		};
-
-		if (action === 'download') {
-			pdfMake.createPdf(docDefinition).download();
-		} else if (action === 'print') {
-			pdfMake.createPdf(docDefinition).print();
-		} else {
-			pdfMake.createPdf(docDefinition).open();
-		}
-	}
-
+	
 	saveOrUpdate: any;
 	submitSaleInvoice() {
 		let iDate = this.saleDetailsForm.controls['invoice_date'].value;
-		console.log(Number.isNaN(0));
 		let customer_id = this.saleDetailsForm.controls['customer_id'].value.split('-');
 		let invoice_id = this.saleDetailsForm.controls['invoice_no'].value.split('/');
 		let sellingDetails = {
@@ -878,6 +386,7 @@ export class SaleInvoiceComponent implements OnInit {
 			sgst_amount: this.sgst_amount,
 			igst_rate: this.igst,
 			igst_amount: this.igst_amount,
+			status: this.saleDetailsForm.controls['status'].value,
 			invoice_no: this.saleDetailsForm.controls['invoice_no'].value,
 			invoice_id: parseInt(invoice_id[1]),
 			invoice_date:
@@ -917,10 +426,12 @@ export class SaleInvoiceComponent implements OnInit {
 		this.saleInvoiceService.saveSaleInvoiceDetails(sellingDetails).subscribe(
 			(data) => {
 				this.ngxLoader.stop();
-				console.log(data['success']);
+				this.toastrService.success(data['success'], 'Success...!');
 				this.router.navigate(['/receipts/sale_invoice_listing']);
 			},
-			(error) => {}
+			(error) => {
+				this.toastrService.error(error.error.message, 'Error!');
+			}
 		);
 	}
 
@@ -942,7 +453,9 @@ export class SaleInvoiceComponent implements OnInit {
 					this.saleDetailsForm.controls['invoice_no'].setValue(latestInvoiceNo);
 				}
 			},
-			(error) => {}
+			(error) => {
+				this.toastrService.error(error.error.message, 'Error!');
+			}
 		);
 	}
 	companyDetails: any = {};
@@ -952,6 +465,7 @@ export class SaleInvoiceComponent implements OnInit {
 		this.saleInvoiceService.getDetailsOfSaleInvoice(this.saleDetailsForm.controls['invoice_no'].value).subscribe(
 			(data) => {
 				this.ngxLoader.stop();
+				this.saleDetailsForm.controls['status'].setValue(data[0][0].status);
 				this.saleDetailsForm.controls['eWayBillNumber'].setValue(data[0][0].eWayBillNumber);
 				this.saleDetailsForm.controls['dispatch_through'].setValue(data[0][0].dispatch_through);
 				this.saleDetailsForm.controls['vehicle_number'].setValue(data[0][0].vehicle_number);
@@ -1013,7 +527,9 @@ export class SaleInvoiceComponent implements OnInit {
 				this.selectedCustomerObj.customer_pin_code = data[0][0].customer_pin_code;
 				this.selectedCustomerObj.customer_mobile_no = data[0][0].customer_mobile_no;
 			},
-			(error) => {}
+			(error) => {
+				this.toastrService.error(error.error.message, 'Error!');
+			}
 		);
 	}
 
@@ -1028,39 +544,39 @@ export class SaleInvoiceComponent implements OnInit {
 		};
 	}
 
-	exportInvoice() {
+	exportInvoice(operation) {
 		const doc = new jsPDF();
 		doc.setFont('Calibri');
 		doc.setFontSize(12);
-		doc.text('TAX INVOICE', 105, 15, 'center');
+		doc.text('TAX INVOICE', 105, 10, 'center');
 		doc.setFontSize(15);
 		doc.setFontType('bold');
-		doc.text('' + this.companyDetails.company_name, 105, 25, 'center');
+		doc.text('' + this.companyDetails.company_name, 105, 20, 'center');
 		doc.setFontSize(12);
 		doc.setFontType('normal');
-		doc.text('M.No.1649, Chandgad At / Post / Tal - Chandgad, Dist - Kolhapur - 416509', 105, 30, 'center');
-		doc.text('Email : gavadesubhash532@gmail.com', 105, 35, 'center');
-		doc.text('Mob. No. : ' + this.companyDetails.mobile_number, 105, 40, 'center');
+		doc.text(''+this.companyDetails.street_address+','+this.companyDetails.city_name+' At / Post / Tal - '+this.companyDetails.tahsil_name+', Dist - '+this.companyDetails.district_name+' - '+this.companyDetails.pin_code, 105, 25, 'center');
+		doc.text('Email : '+this.companyDetails.company_email, 105, 30, 'center');
+		doc.text('Mob. No. : ' + this.companyDetails.mobile_number, 105, 35, 'center');
 		doc.setDrawColor(0);
 		doc.setLineWidth(0.5);
 		doc.setFillColor(255, 255, 255);
-		doc.rect(25, 50, 165, 242, 'FD'); //Fill and Border
-		doc.line(25, 58, 190, 58);
+		doc.rect(25, 42, 165, 252, 'FD'); //Fill and Border
+		doc.line(25, 50, 190, 50);
+		doc.line(110, 58, 190, 58);
 		doc.line(110, 66, 190, 66);
 		doc.line(110, 74, 190, 74);
 		doc.line(110, 82, 190, 82);
-		doc.line(110, 90, 190, 90);
+		doc.line(25, 90, 190, 90);
 		doc.line(25, 98, 190, 98);
 		doc.line(25, 106, 190, 106);
-		doc.line(25, 114, 190, 114);
-		doc.line(110, 50, 110, 230);
+		doc.line(110, 42, 110, 222);
 		doc.setFontStyle('bold');
-		doc.text('Company GSTIN : ', 27, 55);
-		doc.text('' + this.companyDetails.company_gst_no, 65, 55);
-		doc.text('Company PAN : ', 111, 55);
-		doc.text('' + this.companyDetails.company_pan_no, 143, 55);
-		doc.text('Invoice No. : ', 111, 63);
-		doc.text('' + this.saleDetailsForm.controls['invoice_no'].value, 188, 63, 'right');
+		doc.text('Company GSTIN : ', 27, 47);
+		doc.text('' + this.companyDetails.company_gst_no, 65, 47);
+		doc.text('Company PAN : ', 111, 47);
+		doc.text('' + this.companyDetails.company_pan_no, 143, 47);
+		doc.text('Invoice No. : ', 111, 55);
+		doc.text('' + this.saleDetailsForm.controls['invoice_no'].value, 188, 55, 'right');
 		let invoice_date;
 		if (this.saleDetailsForm.controls['invoice_date'].value != null) {
 			let beforeFormatDate = this.saleDetailsForm.controls['invoice_date'].value;
@@ -1069,106 +585,152 @@ export class SaleInvoiceComponent implements OnInit {
 		} else {
 			invoice_date = '';
 		}
-		doc.text('Invoice Date. : ', 111, 71);
-		doc.text('' + invoice_date, 188, 71, 'right');
-		doc.text('E-Way Bill No. : ', 111, 79);
-		doc.text('' + this.saleDetailsForm.controls['eWayBillNumber'].value, 188, 79, 'right');
-		doc.text('Dispatch Through : ', 111, 87);
-		doc.text('' + this.saleDetailsForm.controls['dispatch_through'].value, 188, 87, 'right');
-		doc.text('Vehicle No. : ', 111, 95);
-		doc.text('' + this.saleDetailsForm.controls['vehicle_number'].value, 188, 95, 'right');
-		doc.text('Delivery Note : ', 111, 103);
-		doc.text('', 188, 103, 'right');
-		doc.text('Customer GSTIN : ', 27, 103);
-		doc.text('' + this.selectedCustomerObj.customer_gst_no, 65, 103);
-		doc.text('To , ', 27, 63);
-		doc.text('' + this.selectedCustomerObj.customer_name, 27, 71);
+
+		let customer_gst=this.selectedCustomerObj.customer_gst_no==undefined || this.selectedCustomerObj.customer_gst_no==null?'':this.selectedCustomerObj.customer_gst_no;
+		let customer_name=this.selectedCustomerObj.customer_name==undefined || this.selectedCustomerObj.customer_name==null?'':this.selectedCustomerObj.customer_name;
+		let customer_address=this.selectedCustomerObj.customer_address==undefined || this.selectedCustomerObj.customer_address==null?'':this.selectedCustomerObj.customer_address;
+		let customer_tahsil=this.selectedCustomerObj.customer_tahsil==undefined || this.selectedCustomerObj.customer_tahsil==null?'':this.selectedCustomerObj.customer_tahsil;
+		let customer_district=this.selectedCustomerObj.customer_district==undefined || this.selectedCustomerObj.customer_district==null?'':this.selectedCustomerObj.customer_district;
+		let customer_pin_code=this.selectedCustomerObj.customer_pin_code==undefined || this.selectedCustomerObj.customer_pin_code==null?'':this.selectedCustomerObj.customer_pin_code;
+		let customer_mobile_no=this.selectedCustomerObj.customer_mobile_no==undefined || this.selectedCustomerObj.customer_mobile_no==null?'':this.selectedCustomerObj.customer_mobile_no;
+
+		
+		var splittedCustomerName=doc.splitTextToSize(customer_name, 90);
+		console.log(splittedCustomerName);
+		//doc.text(15, 20, splitTitle);
+		doc.text('Invoice Date. : ', 111, 63);
+		doc.text('' + invoice_date, 188, 63, 'right');
+		doc.text('E-Way Bill No. : ', 111, 71);
+		doc.text('' + this.saleDetailsForm.controls['eWayBillNumber'].value, 188, 71, 'right');
+		doc.text('Dispatch Through : ', 111, 79);
+		doc.text('' + this.saleDetailsForm.controls['dispatch_through'].value, 188, 79, 'right');
+		doc.text('Vehicle No. : ', 111, 87);
+		doc.text('' + this.saleDetailsForm.controls['vehicle_number'].value, 188, 87, 'right');
+		doc.text('Delivery Note : ', 111, 95);
+		doc.text('', 188, 95, 'right');
+		doc.text('Customer GSTIN : ', 27, 95);
+		doc.text('' + customer_gst, 65, 95);
 		doc.setFontStyle('normal');
-		doc.text(''+this.selectedCustomerObj.customer_address+' '+this.selectedCustomerObj.customer_tahsil, 27, 79);
-		doc.text('Dist-'+this.selectedCustomerObj.customer_district+' '+this.selectedCustomerObj.customer_pin_code, 27, 87);
-		doc.text('Mob.No.'+this.selectedCustomerObj.customer_mobile_no, 27, 95);
-		doc.line(37, 106, 36, 230);
-		doc.line(60, 106, 60, 230);
-		doc.line(131, 106, 131, 230);
-		doc.line(153, 106, 153, 230);
-		doc.line(166, 106, 166, 237);
+		doc.text('To , ', 27, 55);
+		doc.setFontStyle('bold');
+		let customerDetailsTop=61;
+		for(let i=0;i<splittedCustomerName.length;i++){
+			doc.text('' + splittedCustomerName[i], 27, customerDetailsTop);
+			customerDetailsTop=customerDetailsTop+6;
+		}
+
+		doc.setFontStyle('normal');
+		doc.setFontSize(11);
+		var splittedCustomerAddress = doc.splitTextToSize(customer_address, 82);
+		for(let i=0;i<splittedCustomerAddress.length;i++){
+			doc.text('' + splittedCustomerAddress[i], 27, customerDetailsTop);
+			customerDetailsTop=customerDetailsTop+5;
+		}
+	    let formattedTahsil=customer_tahsil==''?'':'Tal. '+customer_tahsil+' ';
+		doc.text(formattedTahsil+'Dist-'+customer_district+' '+customer_pin_code, 27, customerDetailsTop);
+		doc.text('Mob.No.'+customer_mobile_no, 27, customerDetailsTop+5);
+		doc.line(37, 98, 36, 187);
+		doc.line(60, 98, 60, 222);
+		doc.line(131, 98, 131, 222);
+		doc.line(153, 98, 153, 187);
+		doc.line(166, 98, 166, 229);
 		doc.setFontSize(11);
 		doc.setFontStyle('bold');
-		doc.text('Sr.No.', 26, 111);
-		doc.text('HSN/SAC', 39, 111);
-		doc.text('Particulars', 62, 111);
-		doc.text('Quantity', 111, 111);
-		doc.text('Rate', 133, 111);
-		doc.text('Per', 155, 111);
-		doc.text('Amount', 168, 111);
-		var top = 125;
+		doc.text('Sr.No.', 26, 103);
+		doc.text('HSN/SAC', 39, 103);
+		doc.text('Particulars', 62, 103);
+		doc.text('Quantity', 111, 103);
+		doc.text('Rate', 133, 103);
+		doc.text('Per', 155, 103);
+		doc.text('Amount', 168, 103);
+		var top = 117;
 
+		var srNo=1;
 		for (let i = 0; i < this.selectedProductList.length; i++) {
-			doc.text('' + i, 35, top, 'right');
+			doc.text('' + srNo, 35, top, 'right');
 			doc.text('' + this.selectedProductList[i].hsn_or_sac_code, 58, top, 'right');
-			doc.text('' + this.selectedProductList[i].product_name, 62, top, 'left');
+			
+			var splittedProductName = doc.splitTextToSize(this.selectedProductList[i].product_name, 45);
+			var productNameTop=top;
+			for(let i=0;i<splittedProductName.length;i++){
+			doc.text('' + splittedProductName[i], 62, productNameTop, 'left');
+			productNameTop+=5;
+			}
 			doc.text('' + this.selectedProductList[i].quantity + ' ' + this.selectedProductList[i].quantityPerUnit, 129, top, 'right');
 			doc.text('' + this.selectedProductList[i].rate, 151, top, 'right');
 			doc.text('' + this.selectedProductList[i].ratePerUnit, 164, top, 'right');
 			doc.text('' + this.selectedProductList[i].total, 188, top, 'right');
 			top += 15;
+			srNo+=1;
 		}
-		doc.line(25, 195, 190, 195);
-		doc.line(25, 202, 190, 202);
-		doc.line(60, 209, 190, 209);
-		doc.line(60, 216, 190, 216);
-		doc.line(60, 223, 190, 223);
-		doc.line(25, 230, 190, 230);
-		doc.line(25, 237, 190, 237);
-		doc.line(25, 248, 190, 248);
-		doc.line(25, 263, 190, 263);
+		doc.line(25, 187, 190, 187);
+		doc.line(25, 194, 190, 194);
+		doc.line(60, 201, 190, 201);
+		doc.line(60, 208, 190, 208);
+		doc.line(60, 215, 190, 215);
+		doc.line(25, 222, 190, 222);
+		doc.line(25, 229, 190, 229);
+		doc.line(25, 241, 190, 241);
+		doc.line(25, 257, 190, 257);
 
-		doc.text('Total', 100, 199);
-		doc.text(this.totalQuantity+' '+this.totalQuantityUnit, 129, 199, 'right');
-		doc.text('' + this.totalSellingCost, 188, 199, 'right');
-		doc.text('Output CGST '+this.cgst+'%', 62, 207, 'left');
-		doc.text(''+this.cgst_amount, 188, 207, 'right');
-		doc.text('Output SGST '+this.sgst+'%', 62, 214, 'left');
-		doc.text(''+this.sgst_amount, 188, 214, 'right');
-		doc.text('Output IGST', 62, 221, 'left');
-		doc.text('Round Off', 62, 228, 'left');
-		doc.text('Grand Total', 140, 235);
-		doc.text(''+this.totalTaxableSellingAmount, 188, 235, 'right');
+		doc.text('Total', 100, 192);
+		doc.text(this.totalQuantity+' '+this.totalQuantityUnit, 129, 192, 'right');
+		doc.text('' + this.totalSellingCost, 188, 192, 'right');
+		doc.text('Output CGST '+this.cgst+'%', 62, 199, 'left');
+		doc.text(''+this.cgst_amount, 188, 199, 'right');
+		doc.text('Output SGST '+this.sgst+'%', 62, 206, 'left');
+		doc.text(''+this.sgst_amount, 188, 206, 'right');
+		doc.text('Output IGST', 62, 213, 'left');
+		doc.text('Round Off', 62, 220, 'left');
+		doc.text('Grand Total', 140, 227);
+		doc.text(''+this.totalTaxableSellingAmount, 188, 227, 'right');
 		doc.setFontStyle('normal');
-		doc.text('Amount in words :', 26, 241);
+		doc.text('Amount in words :', 26, 234);
 		doc.setFontStyle('bold');
-		doc.text('' + this.numberToWordsPipe.transform(this.totalTaxableSellingAmount), 26, 246);
-		doc.text('Declaration :', 26, 252);
+		doc.text('' + this.numberToWordsPipe.transform(this.totalTaxableSellingAmount), 26, 239);
+		doc.text('Declaration :', 26, 245);
 		doc.setFontStyle('normal');
-		doc.text('We declare that this invoice shows the actual price of the goods described and', 26, 257);
-		doc.text('that all particulars are true and correct.', 26, 261);
+		doc.text('We declare that this invoice shows the actual price of the goods described and', 26, 250);
+		doc.text('that all particulars are true and correct.', 26, 255);
 
 		doc.setFontStyle('bold');
 		console.log(this.selectedBankObj);
 		if (Object.keys(this.selectedBankObj).length!==0){
-		doc.line(110, 263, 110, 292);
-		doc.text('Bank Details', 26, 267);
-		doc.line(25, 269, 110, 269);
-		doc.text('Bank Name :', 26, 273);
-		doc.text(''+this.selectedBankObj.bank_name, 52, 273);
-		doc.text('Account No. :', 26, 278);
-		doc.text(''+this.selectedBankObj.account_number, 52, 278);
-		doc.text('Branch Name :', 26, 283);
-		doc.text(''+this.selectedBankObj.branch_name, 52, 283);
-		doc.text('IFSC Code :', 26, 289);
-		doc.text(''+this.selectedBankObj.ifsc_code, 52, 289);
+		var splittedBankname = doc.splitTextToSize(this.selectedBankObj.bank_name, 65);
+		console.log(splittedBankname);
+		doc.line(110, 257, 110, 294);
+		doc.text('Bank Details', 26, 261);
+		doc.line(25, 263, 110, 263);
+		doc.text('Bank Name :', 26, 268);
+		var bankDetailsTop=268;
+		for(let i=0;i<splittedBankname.length;i++){
+			doc.text(''+splittedBankname[i], 52,bankDetailsTop);
+			bankDetailsTop+=6;
+		}
+		doc.text('Account No. :', 26, bankDetailsTop);
+		doc.text(''+this.selectedBankObj.account_number, 52, bankDetailsTop);
+		doc.text('Branch Name :', 26, bankDetailsTop+6);
+		doc.text(''+this.selectedBankObj.branch_name, 52, bankDetailsTop+6);
+		doc.text('IFSC Code :', 26, bankDetailsTop+12);
+		doc.text(''+this.selectedBankObj.ifsc_code, 52, bankDetailsTop+12);
 		}
 		doc.text('For '+this.companyDetails.company_name, 150, 273, 'center');
 		doc.setFontStyle('normal');
 		doc.text('Authorised Signatory', 150, 290, 'center');
 
 		//08013100
+		if(operation=='open'){
 		var string = doc.output('datauristring');
 		var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>";
 		var x = window.open();
 		x.document.open();
 		x.document.write(iframe);
 		x.document.close();
+		}
+
+		if(operation=='download'){
+			doc.save('tax-invoice-'+this.saleDetailsForm.controls['invoice_no'].value+'.pdf');
+		}
 		//doc.autoPrint();
 	}
 }
