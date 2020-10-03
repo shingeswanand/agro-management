@@ -6,28 +6,28 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class NumberToWordsPipe implements PipeTransform {
 	a = [
 		'',
-		'one ',
-		'two ',
-		'three ',
-		'four ',
-		'five ',
-		'six ',
-		'seven ',
-		'eight ',
-		'nine ',
-		'ten ',
-		'eleven ',
-		'twelve ',
-		'thirteen ',
-		'fourteen ',
-		'fifteen ',
-		'sixteen ',
-		'seventeen ',
-		'eighteen ',
-		'nineteen '
+		'One ',
+		'Two ',
+		'Three ',
+		'Four ',
+		'Five ',
+		'Six ',
+		'Seven ',
+		'Eight ',
+		'Nine ',
+		'Ten ',
+		'Eleven ',
+		'Twelve ',
+		'Thirteen ',
+		'Fourteen ',
+		'Fifteen ',
+		'Sixteen ',
+		'Seventeen ',
+		'Eighteen ',
+		'Nineteen '
 	];
 
-	b = [ '', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety' ];
+	b = [ '', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety' ];
 
 	transform(value: any, args?: any): any {
 		if (value) {
@@ -43,25 +43,25 @@ export class NumberToWordsPipe implements PipeTransform {
 				let str = '';
 				str +=
 					Number(n[1]) !== 0
-						? (this.a[Number(n[1])] || this.b[n[1][0]] + ' ' + this.a[n[1][1]]) + 'crore '
+						? (this.a[Number(n[1])] || this.b[n[1][0]] + ' ' + this.a[n[1][1]]) + 'Crore '
 						: '';
 				str +=
 					Number(n[2]) !== 0
-						? (this.a[Number(n[2])] || this.b[n[2][0]] + ' ' + this.a[n[2][1]]) + 'lakh '
+						? (this.a[Number(n[2])] || this.b[n[2][0]] + ' ' + this.a[n[2][1]]) + 'Lakh '
 						: '';
 				str +=
 					Number(n[3]) !== 0
-						? (this.a[Number(n[3])] || this.b[n[3][0]] + ' ' + this.a[n[3][1]]) + 'thousand '
+						? (this.a[Number(n[3])] || this.b[n[3][0]] + ' ' + this.a[n[3][1]]) + 'Thousand '
 						: '';
 				str +=
 					Number(n[4]) !== 0
-						? (this.a[Number(n[4])] || this.b[n[4][0]] + ' ' + this.a[n[4][1]]) + 'hundred '
+						? (this.a[Number(n[4])] || this.b[n[4][0]] + ' ' + this.a[n[4][1]]) + 'Hundred '
 						: '';
 				str +=
 					Number(n[5]) !== 0
-						? (str !== '' ? 'and ' : '') +
+						? (str !== '' ? 'And ' : '') +
 							(this.a[Number(n[5])] || this.b[n[5][0]] + ' ' + this.a[n[5][1]]) +
-							'rupee'
+							'Rupee'
 						: '';
 				return str;
 			} else {

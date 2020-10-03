@@ -12,4 +12,11 @@ export class MastersService {
 			environment.apiBaseUrl + 'products/fetchProductsForSaleInvoice?company_id=' + company_id
 		);
 	}
+
+	saveOrUpdateProductDetails(productDetailsToSubmit) {
+		return this.httpClient.post(
+			environment.apiBaseUrl + 'products/saveOrUpdateProductDetails',
+			productDetailsToSubmit
+		);
+	}
 }

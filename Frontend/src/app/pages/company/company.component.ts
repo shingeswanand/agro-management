@@ -54,6 +54,7 @@ export class CompanyComponent implements OnInit {
 		this.companyDetailsForm = this.fb.group({
 			company_id: this.companyId,
 			company_name: this.companyName,
+			company_email:[''],
 			company_gst_no: [ '' ],
 			company_pan_no: [ '' ],
 			current_rate: [ '' ],
@@ -83,6 +84,7 @@ export class CompanyComponent implements OnInit {
 				this.ngxLoader.stop();
 				this.company_details = data;
 				if (this.company_details.length > 0) {
+					this.companyDetailsForm.controls['company_email'].setValue(data[0].company_email);
 					this.companyDetailsForm.controls['company_gst_no'].setValue(data[0].company_gst_no);
 					this.companyDetailsForm.controls['company_pan_no'].setValue(data[0].company_pan_no);
 					this.companyDetailsForm.controls['street_address'].setValue(data[0].street_address);
@@ -141,6 +143,7 @@ export class CompanyComponent implements OnInit {
 
 		let companyDetails = {
 			company_id: this.companyDetailsForm.controls['company_id'].value,
+			company_email: this.companyDetailsForm.controls['company_email'].value,
 			company_gst_no: this.companyDetailsForm.controls['company_gst_no'].value,
 			company_pan_no: this.companyDetailsForm.controls['company_pan_no'].value,
 			street_address: this.companyDetailsForm.controls['street_address'].value,

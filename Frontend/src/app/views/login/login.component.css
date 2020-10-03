@@ -1,4 +1,4 @@
-h2,h3 {
+h1,h2,h3 {
   text-shadow: 0 1px 0 #ccc,
                0 2px 0 #c9c9c9,
                0 3px 0 #bbb,
@@ -12,3 +12,70 @@ h2,h3 {
                0 10px 10px rgba(0,0,0,.2),
                0 20px 20px rgba(0,0,0,.15);
 }
+
+
+/* Background section */
+
+.error-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* background: 'url(../../assets/sky.jpg) center center no-repeat'; */
+    background-size: 100% 100%;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.error-background .cloud {
+    position: absolute;
+}
+
+.error-background .cloud-big {
+    top: 108px;
+    left: 8%;
+}
+
+.error-background .cloud-small {
+    top: 27px;
+    left: 25%;
+    width: 100px;
+    height: auto;
+}
+
+.error-background .cloud-rain {
+    top: 81px;
+    left: 80%;
+}
+
+.error-background .sea-island {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: auto;
+    width: 85%;
+}
+
+.error-background .rock {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    width: 25%;
+}
+
+.error-background .shark {
+    height: 50px;
+    width: auto;
+    position: absolute;
+    right: 30%;
+    bottom: 10px;
+    -webkit-animation: swimm 15s infinite;
+    -moz-animation: swimm 15s infinite;
+    animation: swimm 15s infinite;
+}
+
+
+/* Media queries */
+
+
