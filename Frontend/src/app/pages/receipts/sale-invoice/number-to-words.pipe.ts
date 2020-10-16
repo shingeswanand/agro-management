@@ -59,9 +59,9 @@ export class NumberToWordsPipe implements PipeTransform {
 						: '';
 				str +=
 					Number(n[5]) !== 0
-						? (str !== '' ? 'And ' : '') +
+						? (str !== '' ? 'and ' : '') +
 							(this.a[Number(n[5])] || this.b[n[5][0]] + ' ' + this.a[n[5][1]]) +
-							'Rupee'
+							'rupees'
 						: '';
 				return str;
 			} else {
