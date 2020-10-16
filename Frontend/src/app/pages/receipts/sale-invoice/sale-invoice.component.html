@@ -227,11 +227,11 @@
                     <!-- <mat-icon>pageview</mat-icon>  -->
                     <i class="fa fa-print"></i>
                 </button>
-                <button type="button" class="btn btn-primary" title="Download As PDF" color="primary" (click)="exportInvoice('download')">
+                    <button type="button" class="btn btn-primary" title="Download As PDF" color="primary" (click)="exportInvoice('download')">
                     <!-- <mat-icon>pageview</mat-icon>  -->
                     <i class="fa fa-file-pdf-o"></i>
                 </button>
-                <button type="button" class="btn btn-primary" title="Back to invoice list" color="primary" [routerLink]="['/receipts/sale_invoice_listing']">
+                    <button type="button" class="btn btn-primary" title="Back to invoice list" color="primary" [routerLink]="['/receipts/sale_invoice_listing']">
                     Invoice Listing
                 </button>
                 </div>
@@ -354,6 +354,21 @@
                                             name="totalTaxableSellingAmount" [(ngModel)]="totalTaxableSellingAmount" [ngModelOptions]="{standalone: true}" value="0"
                                             disabled></b></th>
                         </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="5" style="text-align: right;">Round Off</th>
+                            <th style="text-align: center;" class=""><b><input class="form-control align_pull text-right input-sm total"
+                                        type="text" name="roundOffValue" [(ngModel)]="roundOffValue"
+                                        [ngModelOptions]="{standalone: true}" value="0"      (keyup)="calculateTaxableAmount('roundOff')"
+                                            onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))"></b></th>
+                        </tr>
+                        <tr class="hide_part_of_billing">
+                            <th colspan="5" style="text-align: right;">Total Amount After Round Off (INR)</th>
+                            <th style="text-align: center;" class=""><b><input class="form-control align_pull text-right input-sm total"
+                                        type="text" name="totalRoundOffAmount" [(ngModel)]="totalRoundOffAmount"
+                                        [ngModelOptions]="{standalone: true}" value="0" disabled></b></th>
+                        </tr>
+
                         <!-- <tr class="hide_part_of_billing" style="display: table-row;">
                 				<th colspan="7" style="text-align: right;">Tax (%)</th>
                                 <th style="text-align: right;" class=""><b><input class="form-control align_pull text-center input-sm paid_amount" type="text" name="paid_amount" value="0">

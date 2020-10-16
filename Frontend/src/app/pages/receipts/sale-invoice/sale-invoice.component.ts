@@ -65,7 +65,7 @@ export class SaleInvoiceComponent implements OnInit {
 		private router: Router,
 		private numberToWordsPipe: NumberToWordsPipe,
 		private ngxLoader: NgxUiLoaderService,
-		private toastrService:ToastrService
+		private toastrService: ToastrService
 	) {}
 
 	ngOnInit() {
@@ -87,16 +87,16 @@ export class SaleInvoiceComponent implements OnInit {
 			upi_payment_date: [ null ],
 			upi_transaction_id: [ '' ],
 			customer_id: [ '' ],
-			status:['1']
+			status: [ '1' ]
 		});
 
 		if (this.route.snapshot.paramMap.get('invoice_no') != null) {
 			this.saleDetailsForm.controls['invoice_no'].setValue(atob(this.route.snapshot.paramMap.get('invoice_no')));
 			// this.saleDetailsForm.controls['invoice_no'].setValue(atob(this.route.snapshot.paramMap.get('invoice_no'))); // get customer no from route
 			this.getDetailsOfSaleInvoice();
-			this.saveOrUpdate=2;
+			this.saveOrUpdate = 2;
 		} else {
-			this.saveOrUpdate=1;
+			this.saveOrUpdate = 1;
 			this.getDetailsForSaleInvoice();
 			this.saleDetailsForm.patchValue({
 				invoice_date: {
@@ -120,7 +120,7 @@ export class SaleInvoiceComponent implements OnInit {
 			},
 			(error) => {
 				this.toastrService.error(error.error.message, 'Error!');
-					this.ngxLoader.stop();
+				this.ngxLoader.stop();
 			}
 		);
 	}
@@ -159,9 +159,12 @@ export class SaleInvoiceComponent implements OnInit {
 		}
 	}
 
-	totalSellingCost: any;
+	totalSellingCost: any = 0;
 	totalQuantityUnit: string = '';
-	totalQuantity: any;
+	totalQuantity: any = 0;
+	roundOffValue: any = 0;
+	totalRoundOffAmount: any = 0;
+
 	updateProductCart(event, cell, rowIndex) {
 		if (cell == 'ratePerUnit') {
 			this.selectedProductList[rowIndex][cell] = event.target.value;
@@ -170,15 +173,26 @@ export class SaleInvoiceComponent implements OnInit {
 		} else {
 			this.selectedProductList[rowIndex][cell] = event.target.value;
 			// this.job_no + '_' + this.itemsAddedForMelting[rowIndex]['item_id'] + '_' + imageAM.name;
-			this.selectedProductList[rowIndex]['total'] =
+
+			let productTotal =
 				this.selectedProductList[rowIndex]['quantity'] * this.selectedProductList[rowIndex]['rate'];
+			this.selectedProductList[rowIndex]['total'] = productTotal.toFixed(2);
 			this.selectedProductList = [ ...this.selectedProductList ];
-			this.totalSellingCost = this.selectedProductList.reduce((sum, item) => sum + item.total, 0);
-			this.sgst_amount = this.totalSellingCost * (this.sgst / 100);
-			this.cgst_amount = this.totalSellingCost * (this.cgst / 100);
-			this.igst_amount = this.totalSellingCost * (this.igst / 100);
-			this.totalTaxableSellingAmount =
-				this.totalSellingCost + this.sgst_amount + this.cgst_amount + this.igst_amount;
+			let totalAmount = this.selectedProductList.reduce(
+				(sum, item) => parseFloat(sum) + parseFloat(item.total),
+				0
+			);
+			this.totalSellingCost = totalAmount.toFixed(2);
+			this.sgst_amount = (totalAmount * (parseFloat(this.sgst) / 100)).toFixed(2);
+			this.cgst_amount = (totalAmount * (parseFloat(this.cgst) / 100)).toFixed(2);
+			this.igst_amount = (totalAmount * (parseFloat(this.igst) / 100)).toFixed(2);
+			this.roundOffValue = 0;
+			this.totalTaxableSellingAmount = (totalAmount +
+				(parseFloat(this.sgst_amount)) +
+				(parseFloat(this.cgst_amount)) +
+				(parseFloat(this.igst_amount))).toFixed(2);
+			this.totalRoundOffAmount = (parseFloat(this.totalTaxableSellingAmount) +
+				parseFloat(this.roundOffValue)).toFixed(2);
 			this.totalQuantity = this.selectedProductList.reduce(
 				(totalQuantity, item) => parseFloat(totalQuantity) + parseFloat(item.quantity),
 				0
@@ -191,18 +205,25 @@ export class SaleInvoiceComponent implements OnInit {
 	removeProduct(index) {
 		// this.totalAmount = parseFloat(this.totalAmount) - parseFloat(this.product_details[index].amount);
 		// this.totalQuantity = parseFloat(this.totalQuantity) - parseFloat(this.product_details[index].quantity);
-
+		this.roundOffValue = 0;
 		this.selectedProductList.splice(index, 1);
 		this.selectedProductList = [ ...this.selectedProductList ];
 		this.totalQuantity = this.selectedProductList.reduce(
 			(totalQuantity, item) => parseFloat(totalQuantity) + parseFloat(item.quantity),
 			0
 		);
-		this.totalSellingCost = this.selectedProductList.reduce((sum, item) => sum + item.total, 0);
-		this.sgst_amount = this.totalSellingCost * (this.sgst / 100);
-		this.cgst_amount = this.totalSellingCost * (this.cgst / 100);
-		this.igst_amount = this.totalSellingCost * (this.igst / 100);
-		this.totalTaxableSellingAmount = this.totalSellingCost + this.sgst_amount + this.cgst_amount + this.igst_amount;
+		
+		let totalCost=this.selectedProductList.reduce((sum, item) => parseFloat(sum) + parseFloat(item.total), 0);
+		this.totalSellingCost = (totalCost).toFixed(2);
+		this.sgst_amount = (this.totalSellingCost * (parseFloat(this.sgst) / 100)).toFixed(2);
+		this.cgst_amount = (this.totalSellingCost * (parseFloat(this.cgst) / 100)).toFixed(2);
+		this.igst_amount = (this.totalSellingCost * (parseFloat(this.igst) / 100)).toFixed(2);
+		this.totalTaxableSellingAmount = (this.totalSellingCost +
+			parseFloat(this.sgst_amount) +
+			parseFloat(this.cgst_amount) +
+			parseFloat(this.igst_amount)).toFixed(2);
+		this.totalRoundOffAmount = (parseFloat(this.totalTaxableSellingAmount) +
+			parseFloat(this.roundOffValue)).toFixed(2);
 	} //end of method
 
 	trackByFn(index: any, item: any) {
@@ -216,23 +237,35 @@ export class SaleInvoiceComponent implements OnInit {
 	cgst_amount: any = 0;
 	igst: any = 0;
 	igst_amount: any = 0;
-	totalTaxableSellingAmount: any;
+	totalTaxableSellingAmount: any = 0;
 	calculateTaxableAmount(taxType) {
 		if (taxType == 'sgst') {
-			this.sgst_amount = this.totalSellingCost * (this.sgst / 100);
-			this.totalTaxableSellingAmount =
-				this.totalSellingCost + this.sgst_amount + this.cgst_amount + this.igst_amount;
+			this.roundOffValue = 0;
+			this.sgst_amount = (parseFloat(this.totalSellingCost) * (parseFloat(this.sgst) / 100)).toFixed(2);
+			this.totalTaxableSellingAmount = (parseFloat(this.totalSellingCost) +
+				parseFloat(this.sgst_amount) +
+				parseFloat(this.cgst_amount) +
+				parseFloat(this.igst_amount)).toFixed(2);
 		}
 		if (taxType == 'cgst') {
-			this.cgst_amount = this.totalSellingCost * (this.cgst / 100);
-			this.totalTaxableSellingAmount =
-				this.totalSellingCost + this.sgst_amount + this.cgst_amount + this.igst_amount;
+			this.roundOffValue = 0;
+			this.cgst_amount = (parseFloat(this.totalSellingCost) * (parseFloat(this.cgst) / 100)).toFixed(2);
+			this.totalTaxableSellingAmount = (parseFloat(this.totalSellingCost) +
+				parseFloat(this.sgst_amount) +
+				parseFloat(this.cgst_amount) +
+				parseFloat(this.igst_amount)).toFixed(2);
 		}
 		if (taxType == 'igst') {
-			this.igst_amount = this.totalSellingCost * (this.igst / 100);
-			this.totalTaxableSellingAmount =
-				this.totalSellingCost + this.sgst_amount + this.cgst_amount + this.igst_amount;
+			this.roundOffValue = 0;
+			this.igst_amount = (parseFloat(this.totalSellingCost) * (parseFloat(this.igst) / 100)).toFixed(2);
+			this.totalTaxableSellingAmount = (parseFloat(this.totalSellingCost) +
+				parseFloat(this.sgst_amount) +
+				parseFloat(this.cgst_amount) +
+				parseFloat(this.igst_amount)).toFixed(2);
 		}
+
+		this.totalRoundOffAmount = (parseFloat(this.totalTaxableSellingAmount) +
+			parseFloat(this.roundOffValue)).toFixed(2);
 	}
 
 	searchCustomer(e) {
@@ -278,7 +311,7 @@ export class SaleInvoiceComponent implements OnInit {
 	isNEFTPayment: boolean = false;
 
 	onPaymentModeChange() {
-		this.selectedBankObj={};
+		this.selectedBankObj = {};
 		if (this.saleDetailsForm.controls['payment_mode'].value == 1) {
 			this.isCashPayment = true;
 			this.isChequePayment = false;
@@ -328,7 +361,7 @@ export class SaleInvoiceComponent implements OnInit {
 
 	selectedBankObj: any = {};
 	onPaymentBankChange() {
-		if (this.saleDetailsForm.controls['company_bank_id'].value!=''){
+		if (this.saleDetailsForm.controls['company_bank_id'].value != '') {
 			this.selectedBankObj = this.companyBankDetails.find(
 				(c) => c.bank_id == this.saleDetailsForm.controls['company_bank_id'].value
 			);
@@ -350,7 +383,7 @@ export class SaleInvoiceComponent implements OnInit {
 				// this.ngxLoader.stop();
 			},
 			(error) => {
-					this.toastrService.error(error.error.message, 'Error!');
+				this.toastrService.error(error.error.message, 'Error!');
 				this.ngxLoader.stop();
 			}
 		);
@@ -367,7 +400,7 @@ export class SaleInvoiceComponent implements OnInit {
 		{ sr_no: '', hsn_or_sac_code: '', product_name: '', quantity: '', rate: '', amount: '' },
 		{ sr_no: '1', hsn_or_sac_code: '123', product_name: 'W Mix', quantity: '210', rate: '20', amount: '2540' }
 	];
-	
+
 	saveOrUpdate: any;
 	submitSaleInvoice() {
 		let iDate = this.saleDetailsForm.controls['invoice_date'].value;
@@ -376,6 +409,8 @@ export class SaleInvoiceComponent implements OnInit {
 		let sellingDetails = {
 			saveOrUpdate: this.saveOrUpdate,
 			product_details: this.selectedProductList,
+			roundOff: this.roundOffValue == undefined ? 0 : this.roundOffValue,
+			finalAmount: this.totalRoundOffAmount == undefined ? 0 : this.totalRoundOffAmount,
 			grand_total: this.totalTaxableSellingAmount == undefined ? 0 : this.totalTaxableSellingAmount,
 			total_amount_excluding_tax: this.totalSellingCost == undefined ? 0 : this.totalSellingCost,
 			total_quantity: this.totalQuantity == undefined ? 0 : this.totalQuantity,
@@ -427,7 +462,7 @@ export class SaleInvoiceComponent implements OnInit {
 			(data) => {
 				this.ngxLoader.stop();
 				this.toastrService.success(data['success'], 'Success...!');
-				this.router.navigate(['/receipts/sale_invoice_listing']);
+				this.router.navigate([ '/receipts/sale_invoice_listing' ]);
 			},
 			(error) => {
 				this.toastrService.error(error.error.message, 'Error!');
@@ -506,6 +541,8 @@ export class SaleInvoiceComponent implements OnInit {
 				this.totalQuantity = data[0][0].total_quantity;
 				this.totalQuantityUnit = data[0][0].total_quantity_unit;
 				this.totalTaxableSellingAmount = data[0][0].grand_total;
+				this.roundOffValue = data[0][0].roundOff;
+				this.totalRoundOffAmount = data[0][0].finalAmount;
 				this.totalSellingCost = data[0][0].total_amount_excluding_tax;
 				this.igst = data[0][0].igst_rate;
 				this.igst_amount = data[0][0].igst_amount;
@@ -554,8 +591,22 @@ export class SaleInvoiceComponent implements OnInit {
 		doc.text('' + this.companyDetails.company_name, 105, 20, 'center');
 		doc.setFontSize(12);
 		doc.setFontType('normal');
-		doc.text(''+this.companyDetails.street_address+','+this.companyDetails.city_name+' At / Post / Tal - '+this.companyDetails.tahsil_name+', Dist - '+this.companyDetails.district_name+' - '+this.companyDetails.pin_code, 105, 25, 'center');
-		doc.text('Email : '+this.companyDetails.company_email, 105, 30, 'center');
+		doc.text(
+			'' +
+				this.companyDetails.street_address +
+				',' +
+				this.companyDetails.city_name +
+				' At / Post / Tal - ' +
+				this.companyDetails.tahsil_name +
+				', Dist - ' +
+				this.companyDetails.district_name +
+				' - ' +
+				this.companyDetails.pin_code,
+			105,
+			25,
+			'center'
+		);
+		doc.text('Email : ' + this.companyDetails.company_email, 105, 30, 'center');
 		doc.text('Mob. No. : ' + this.companyDetails.mobile_number, 105, 35, 'center');
 		doc.setDrawColor(0);
 		doc.setLineWidth(0.5);
@@ -586,16 +637,39 @@ export class SaleInvoiceComponent implements OnInit {
 			invoice_date = '';
 		}
 
-		let customer_gst=this.selectedCustomerObj.customer_gst_no==undefined || this.selectedCustomerObj.customer_gst_no==null?'':this.selectedCustomerObj.customer_gst_no;
-		let customer_name=this.selectedCustomerObj.customer_name==undefined || this.selectedCustomerObj.customer_name==null?'':this.selectedCustomerObj.customer_name;
-		let customer_address=this.selectedCustomerObj.customer_address==undefined || this.selectedCustomerObj.customer_address==null?'':this.selectedCustomerObj.customer_address;
-		let customer_tahsil=this.selectedCustomerObj.customer_tahsil==undefined || this.selectedCustomerObj.customer_tahsil==null?'':this.selectedCustomerObj.customer_tahsil;
-		let customer_district=this.selectedCustomerObj.customer_district==undefined || this.selectedCustomerObj.customer_district==null?'':this.selectedCustomerObj.customer_district;
-		let customer_pin_code=this.selectedCustomerObj.customer_pin_code==undefined || this.selectedCustomerObj.customer_pin_code==null?'':this.selectedCustomerObj.customer_pin_code;
-		let customer_mobile_no=this.selectedCustomerObj.customer_mobile_no==undefined || this.selectedCustomerObj.customer_mobile_no==null?'':this.selectedCustomerObj.customer_mobile_no;
+		let customer_gst =
+			this.selectedCustomerObj.customer_gst_no == undefined || this.selectedCustomerObj.customer_gst_no == null
+				? ''
+				: this.selectedCustomerObj.customer_gst_no;
+		let customer_name =
+			this.selectedCustomerObj.customer_name == undefined || this.selectedCustomerObj.customer_name == null
+				? ''
+				: this.selectedCustomerObj.customer_name;
+		let customer_address =
+			this.selectedCustomerObj.customer_address == undefined || this.selectedCustomerObj.customer_address == null
+				? ''
+				: this.selectedCustomerObj.customer_address;
+		let customer_tahsil =
+			this.selectedCustomerObj.customer_tahsil == undefined || this.selectedCustomerObj.customer_tahsil == null
+				? ''
+				: this.selectedCustomerObj.customer_tahsil;
+		let customer_district =
+			this.selectedCustomerObj.customer_district == undefined ||
+			this.selectedCustomerObj.customer_district == null
+				? ''
+				: this.selectedCustomerObj.customer_district;
+		let customer_pin_code =
+			this.selectedCustomerObj.customer_pin_code == undefined ||
+			this.selectedCustomerObj.customer_pin_code == null
+				? ''
+				: this.selectedCustomerObj.customer_pin_code;
+		let customer_mobile_no =
+			this.selectedCustomerObj.customer_mobile_no == undefined ||
+			this.selectedCustomerObj.customer_mobile_no == null
+				? ''
+				: this.selectedCustomerObj.customer_mobile_no;
 
-		
-		var splittedCustomerName=doc.splitTextToSize(customer_name, 90);
+		var splittedCustomerName = doc.splitTextToSize(customer_name, 90);
 		console.log(splittedCustomerName);
 		//doc.text(15, 20, splitTitle);
 		doc.text('Invoice Date. : ', 111, 63);
@@ -613,22 +687,22 @@ export class SaleInvoiceComponent implements OnInit {
 		doc.setFontStyle('normal');
 		doc.text('To , ', 27, 55);
 		doc.setFontStyle('bold');
-		let customerDetailsTop=61;
-		for(let i=0;i<splittedCustomerName.length;i++){
+		let customerDetailsTop = 61;
+		for (let i = 0; i < splittedCustomerName.length; i++) {
 			doc.text('' + splittedCustomerName[i], 27, customerDetailsTop);
-			customerDetailsTop=customerDetailsTop+6;
+			customerDetailsTop = customerDetailsTop + 6;
 		}
 
 		doc.setFontStyle('normal');
 		doc.setFontSize(11);
 		var splittedCustomerAddress = doc.splitTextToSize(customer_address, 82);
-		for(let i=0;i<splittedCustomerAddress.length;i++){
+		for (let i = 0; i < splittedCustomerAddress.length; i++) {
 			doc.text('' + splittedCustomerAddress[i], 27, customerDetailsTop);
-			customerDetailsTop=customerDetailsTop+5;
+			customerDetailsTop = customerDetailsTop + 5;
 		}
-	    let formattedTahsil=customer_tahsil==''?'':'Tal. '+customer_tahsil+' ';
-		doc.text(formattedTahsil+'Dist-'+customer_district+' '+customer_pin_code, 27, customerDetailsTop);
-		doc.text('Mob.No.'+customer_mobile_no, 27, customerDetailsTop+5);
+		let formattedTahsil = customer_tahsil == '' ? '' : 'Tal. ' + customer_tahsil + ' ';
+		doc.text(formattedTahsil + 'Dist-' + customer_district + ' ' + customer_pin_code, 27, customerDetailsTop);
+		doc.text('Mob.No.' + customer_mobile_no, 27, customerDetailsTop + 5);
 		doc.line(37, 98, 36, 187);
 		doc.line(60, 98, 60, 222);
 		doc.line(131, 98, 131, 222);
@@ -645,23 +719,28 @@ export class SaleInvoiceComponent implements OnInit {
 		doc.text('Amount', 168, 103);
 		var top = 117;
 
-		var srNo=1;
+		var srNo = 1;
 		for (let i = 0; i < this.selectedProductList.length; i++) {
 			doc.text('' + srNo, 35, top, 'right');
 			doc.text('' + this.selectedProductList[i].hsn_or_sac_code, 58, top, 'right');
-			
+
 			var splittedProductName = doc.splitTextToSize(this.selectedProductList[i].product_name, 45);
-			var productNameTop=top;
-			for(let i=0;i<splittedProductName.length;i++){
-			doc.text('' + splittedProductName[i], 62, productNameTop, 'left');
-			productNameTop+=5;
+			var productNameTop = top;
+			for (let i = 0; i < splittedProductName.length; i++) {
+				doc.text('' + splittedProductName[i], 62, productNameTop, 'left');
+				productNameTop += 5;
 			}
-			doc.text('' + this.selectedProductList[i].quantity + ' ' + this.selectedProductList[i].quantityPerUnit, 129, top, 'right');
+			doc.text(
+				'' + this.selectedProductList[i].quantity + ' ' + this.selectedProductList[i].quantityPerUnit,
+				129,
+				top,
+				'right'
+			);
 			doc.text('' + this.selectedProductList[i].rate, 151, top, 'right');
 			doc.text('' + this.selectedProductList[i].ratePerUnit, 164, top, 'right');
 			doc.text('' + this.selectedProductList[i].total, 188, top, 'right');
 			top += 15;
-			srNo+=1;
+			srNo += 1;
 		}
 		doc.line(25, 187, 190, 187);
 		doc.line(25, 194, 190, 194);
@@ -674,20 +753,21 @@ export class SaleInvoiceComponent implements OnInit {
 		doc.line(25, 257, 190, 257);
 
 		doc.text('Total', 100, 192);
-		doc.text(this.totalQuantity+' '+this.totalQuantityUnit, 129, 192, 'right');
+		doc.text(this.totalQuantity + ' ' + this.totalQuantityUnit, 129, 192, 'right');
 		doc.text('' + this.totalSellingCost, 188, 192, 'right');
-		doc.text('Output CGST '+this.cgst+'%', 62, 199, 'left');
-		doc.text(''+this.cgst_amount, 188, 199, 'right');
-		doc.text('Output SGST '+this.sgst+'%', 62, 206, 'left');
-		doc.text(''+this.sgst_amount, 188, 206, 'right');
+		doc.text('Output CGST ' + this.cgst + '%', 62, 199, 'left');
+		doc.text('' + this.cgst_amount, 188, 199, 'right');
+		doc.text('Output SGST ' + this.sgst + '%', 62, 206, 'left');
+		doc.text('' + this.sgst_amount, 188, 206, 'right');
 		doc.text('Output IGST', 62, 213, 'left');
 		doc.text('Round Off', 62, 220, 'left');
 		doc.text('Grand Total', 140, 227);
-		doc.text(''+this.totalTaxableSellingAmount, 188, 227, 'right');
+		doc.text('' + this.roundOffValue, 188, 220, 'right');
+		doc.text('' + this.totalRoundOffAmount, 188, 227, 'right');
 		doc.setFontStyle('normal');
 		doc.text('Amount in words :', 26, 234);
 		doc.setFontStyle('bold');
-		doc.text('' + this.numberToWordsPipe.transform(this.totalTaxableSellingAmount), 26, 239);
+		doc.text('' + this.numberToWordsPipe.transform(this.totalRoundOffAmount), 26, 239);
 		doc.text('Declaration :', 26, 245);
 		doc.setFontStyle('normal');
 		doc.text('We declare that this invoice shows the actual price of the goods described and', 26, 250);
@@ -695,41 +775,41 @@ export class SaleInvoiceComponent implements OnInit {
 
 		doc.setFontStyle('bold');
 		console.log(this.selectedBankObj);
-		if (Object.keys(this.selectedBankObj).length!==0){
-		var splittedBankname = doc.splitTextToSize(this.selectedBankObj.bank_name, 65);
-		console.log(splittedBankname);
-		doc.line(110, 257, 110, 294);
-		doc.text('Bank Details', 26, 261);
-		doc.line(25, 263, 110, 263);
-		doc.text('Bank Name :', 26, 268);
-		var bankDetailsTop=268;
-		for(let i=0;i<splittedBankname.length;i++){
-			doc.text(''+splittedBankname[i], 52,bankDetailsTop);
-			bankDetailsTop+=6;
+		if (Object.keys(this.selectedBankObj).length !== 0) {
+			var splittedBankname = doc.splitTextToSize(this.selectedBankObj.bank_name, 65);
+			console.log(splittedBankname);
+			doc.line(110, 257, 110, 294);
+			doc.text('Bank Details', 26, 261);
+			doc.line(25, 263, 110, 263);
+			doc.text('Bank Name :', 26, 268);
+			var bankDetailsTop = 268;
+			for (let i = 0; i < splittedBankname.length; i++) {
+				doc.text('' + splittedBankname[i], 52, bankDetailsTop);
+				bankDetailsTop += 6;
+			}
+			doc.text('Account No. :', 26, bankDetailsTop);
+			doc.text('' + this.selectedBankObj.account_number, 52, bankDetailsTop);
+			doc.text('Branch Name :', 26, bankDetailsTop + 6);
+			doc.text('' + this.selectedBankObj.branch_name, 52, bankDetailsTop + 6);
+			doc.text('IFSC Code :', 26, bankDetailsTop + 12);
+			doc.text('' + this.selectedBankObj.ifsc_code, 52, bankDetailsTop + 12);
 		}
-		doc.text('Account No. :', 26, bankDetailsTop);
-		doc.text(''+this.selectedBankObj.account_number, 52, bankDetailsTop);
-		doc.text('Branch Name :', 26, bankDetailsTop+6);
-		doc.text(''+this.selectedBankObj.branch_name, 52, bankDetailsTop+6);
-		doc.text('IFSC Code :', 26, bankDetailsTop+12);
-		doc.text(''+this.selectedBankObj.ifsc_code, 52, bankDetailsTop+12);
-		}
-		doc.text('For '+this.companyDetails.company_name, 150, 273, 'center');
+		doc.text('For ' + this.companyDetails.company_name, 150, 273, 'center');
 		doc.setFontStyle('normal');
 		doc.text('Authorised Signatory', 150, 290, 'center');
 
 		//08013100
-		if(operation=='open'){
-		var string = doc.output('datauristring');
-		var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>";
-		var x = window.open();
-		x.document.open();
-		x.document.write(iframe);
-		x.document.close();
+		if (operation == 'open') {
+			var string = doc.output('datauristring');
+			var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>";
+			var x = window.open();
+			x.document.open();
+			x.document.write(iframe);
+			x.document.close();
 		}
 
-		if(operation=='download'){
-			doc.save('tax-invoice-'+this.saleDetailsForm.controls['invoice_no'].value+'.pdf');
+		if (operation == 'download') {
+			doc.save('tax-invoice-' + this.saleDetailsForm.controls['invoice_no'].value + '.pdf');
 		}
 		//doc.autoPrint();
 	}
