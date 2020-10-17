@@ -242,11 +242,11 @@
                         <tr>
                             <th width="3%">Action</th>
                             <!-- <th width="5%" style="display: none;">No</th> -->
-                            <th width="12%">HSN/SAC</th>
-                            <th width="20%">Product/Item</th>
-                            <th width="25%">Quantity(In KGS.)</th>
+                            <th width="10%">HSN/SAC</th>
+                            <th width="15%">Product/Item</th>
+                            <th width="28%">Quantity(In KGS.)</th>
                             <!-- <th width="10%">Weight</th> -->
-                            <th width="25%">Rate (Per KGS.)</th>
+                            <th width="29%">Rate (Per KGS.)</th>
                             <th width="15%">Amount</th>
                         </tr>
                     </thead>
@@ -258,13 +258,14 @@
                             <td class="p-l-10">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control input-sm text-right" style="float:left;width:70%;" (keyup)="updateProductCart($event,'quantity',rowIndex)" [id]="'quantity-'+rowIndex" name="'quantity-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                        <input type="text" class="col-6 col-sm-8 form-control input-sm text-right" style="float:left;" (keyup)="updateProductCart($event,'quantity',rowIndex)" [id]="'quantity-'+rowIndex" name="'quantity-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
                                 || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.quantity" />
-                                        <select class="form-control" style="float:left;width:30%;" (change)="updateProductCart($event,'quantityPerUnit',rowIndex)" [(ngModel)]="selectedProduct.quantityPerUnit" [ngModelOptions]="{standalone: true}" [id]="'quantityPerUnit-'+rowIndex">
+                                        <select class="form-control col-6 col-sm-4" style="float:left;" (change)="updateProductCart($event,'quantityPerUnit',rowIndex)" [(ngModel)]="selectedProduct.quantityPerUnit" [ngModelOptions]="{standalone: true}" [id]="'quantityPerUnit-'+rowIndex">
                                          <option value=""></option>
                                     <option value="Kgs.">Kgs.</option>
                                     <option value="Gms.">Gms.</option>
                                     <option value="Pcs.">Pcs.</option>
+                                    <option value="Tin">Tin</option>
                                 </select>
                                     </div>
                                 </div>
@@ -274,13 +275,14 @@
                             <td class="p-l-10 p-r-10">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control input-sm text-right" style="float:left;width:70%;" (keyup)="updateProductCart($event,'rate',rowIndex)" [id]="'rate-'+rowIndex" name="'rate-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
+                                        <input type="text" class="col-6 col-sm-8 form-control input-sm text-right" style="float:left;" (keyup)="updateProductCart($event,'rate',rowIndex)" [id]="'rate-'+rowIndex" name="'rate-'+rowIndex" onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
                                                                     || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))" [value]="selectedProduct.rate" />
-                                        <select class="form-control" style="float:left;width:30%;" (change)="updateProductCart($event,'ratePerUnit',rowIndex)" [id]="'ratePerUnit-'+rowIndex" [value]="selectedProduct.ratePerUnit">
+                                        <select class="form-control col-6 col-sm-4" style="float:left;" (change)="updateProductCart($event,'ratePerUnit',rowIndex)" [id]="'ratePerUnit-'+rowIndex" [value]="selectedProduct.ratePerUnit">
                                         <option value=""></option>
                                     <option value="Kgs.">Kgs.</option>
                                     <option value="Gms.">Gms.</option>
                                     <option value="Pcs.">Pcs.</option>
+                                    <option value="Tin">Tin</option>
                                         </select>
                                     </div>
                                 </div>
@@ -300,12 +302,13 @@
                             <th>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantity" class="form-control input-sm text-right" style="width:70%;float:left;" />
-                                        <select class="form-control" style="width:30%;float:left;" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantityUnit">
+                                        <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantity" class="form-control input-sm text-right col-6 col-sm-8" style="float:left;" />
+                                        <select class="form-control col-6 col-sm-4" style="float:left;" [ngModelOptions]="{standalone: true}" [(ngModel)]="totalQuantityUnit">
                                             <option value=""></option>
                                                 <option value="Kgs.">Kgs.</option>
                                     <option value="Gms.">Gms.</option>
                                     <option value="Pcs.">Pcs.</option>
+                                    <option value="Tin">Tin</option>
                                     </select>
                                     </div>
                                 </div>
@@ -358,15 +361,13 @@
                             <th colspan="5" style="text-align: right;">Round Off</th>
                             <th style="text-align: center;" class=""><b><input class="form-control align_pull text-right input-sm total"
                                         type="text" name="roundOffValue" [(ngModel)]="roundOffValue"
-                                        [ngModelOptions]="{standalone: true}" value="0"      (keyup)="calculateTaxableAmount('roundOff')"
-                                            onkeypress="return((event.charCode> 64 && event.charCode< 91) || event.charCode==46
-                                                                    || event.charCode==8 || (event.charCode>= 48 && event.charCode<=57))"></b></th>
+                                        [ngModelOptions]="{standalone: true}" value="0"      (keyup)="calculateTaxableAmount('roundOff')"></b></th>
                         </tr>
                         <tr class="hide_part_of_billing">
                             <th colspan="5" style="text-align: right;">Total Amount After Round Off (INR)</th>
                             <th style="text-align: center;" class=""><b><input class="form-control align_pull text-right input-sm total"
                                         type="text" name="totalRoundOffAmount" [(ngModel)]="totalRoundOffAmount"
-                                        [ngModelOptions]="{standalone: true}" value="0" disabled></b></th>
+                                        [ngModelOptions]="{standalone: true}" value="0"></b></th>
                         </tr>
 
                         <!-- <tr class="hide_part_of_billing" style="display: table-row;">

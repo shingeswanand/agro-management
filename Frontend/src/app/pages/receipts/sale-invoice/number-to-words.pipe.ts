@@ -61,7 +61,7 @@ export class NumberToWordsPipe implements PipeTransform {
 					Number(n[5]) !== 0
 						? (str !== '' ? 'and ' : '') +
 							(this.a[Number(n[5])] || this.b[n[5][0]] + ' ' + this.a[n[5][1]]) +
-							'rupees'
+							'only'
 						: '';
 				return str;
 			} else {

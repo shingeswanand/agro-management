@@ -188,9 +188,9 @@ export class SaleInvoiceComponent implements OnInit {
 			this.igst_amount = (totalAmount * (parseFloat(this.igst) / 100)).toFixed(2);
 			this.roundOffValue = 0;
 			this.totalTaxableSellingAmount = (totalAmount +
-				(parseFloat(this.sgst_amount)) +
-				(parseFloat(this.cgst_amount)) +
-				(parseFloat(this.igst_amount))).toFixed(2);
+				parseFloat(this.sgst_amount) +
+				parseFloat(this.cgst_amount) +
+				parseFloat(this.igst_amount)).toFixed(2);
 			this.totalRoundOffAmount = (parseFloat(this.totalTaxableSellingAmount) +
 				parseFloat(this.roundOffValue)).toFixed(2);
 			this.totalQuantity = this.selectedProductList.reduce(
@@ -212,9 +212,9 @@ export class SaleInvoiceComponent implements OnInit {
 			(totalQuantity, item) => parseFloat(totalQuantity) + parseFloat(item.quantity),
 			0
 		);
-		
-		let totalCost=this.selectedProductList.reduce((sum, item) => parseFloat(sum) + parseFloat(item.total), 0);
-		this.totalSellingCost = (totalCost).toFixed(2);
+
+		let totalCost = this.selectedProductList.reduce((sum, item) => parseFloat(sum) + parseFloat(item.total), 0);
+		this.totalSellingCost = totalCost.toFixed(2);
 		this.sgst_amount = (this.totalSellingCost * (parseFloat(this.sgst) / 100)).toFixed(2);
 		this.cgst_amount = (this.totalSellingCost * (parseFloat(this.cgst) / 100)).toFixed(2);
 		this.igst_amount = (this.totalSellingCost * (parseFloat(this.igst) / 100)).toFixed(2);
@@ -361,9 +361,28 @@ export class SaleInvoiceComponent implements OnInit {
 
 	selectedBankObj: any = {};
 	onPaymentBankChange() {
+		if (this.saleDetailsForm.controls['company_bank_id'].value == undefined) {
+			return false;
+		}
+
+		if (this.saleDetailsForm.controls['company_bank_id'].value == null) {
+			return false;
+		}
+
 		if (this.saleDetailsForm.controls['company_bank_id'].value != '') {
-			this.selectedBankObj = this.companyBankDetails.find(
-				(c) => c.bank_id == this.saleDetailsForm.controls['company_bank_id'].value
+			this.ngxLoader.start();
+			this.bankMasterService.fetchCompanyBankList().subscribe(
+				(data) => {
+					this.ngxLoader.stop();
+					this.companyBankDetails = data;
+					this.selectedBankObj = this.companyBankDetails.find(
+						(c) => c.bank_id == this.saleDetailsForm.controls['company_bank_id'].value
+					);
+				},
+				(error) => {
+					this.toastrService.error(error.error.message, 'Error!');
+					this.ngxLoader.stop();
+				}
 			);
 		}
 	}
@@ -457,6 +476,7 @@ export class SaleInvoiceComponent implements OnInit {
 			record_updated_by: atob(localStorage.getItem('userId')),
 			record_updated_date: new Date().toISOString().split('T')[0]
 		};
+
 		this.ngxLoader.start();
 		this.saleInvoiceService.saveSaleInvoiceDetails(sellingDetails).subscribe(
 			(data) => {
@@ -507,7 +527,6 @@ export class SaleInvoiceComponent implements OnInit {
 				this.saleDetailsForm.controls['payment_mode'].setValue(data[0][0].payment_mode);
 				this.onPaymentModeChange();
 				this.saleDetailsForm.controls['company_bank_id'].setValue(data[0][0].company_bank_id);
-				this.onPaymentBankChange();
 				this.saleDetailsForm.controls['cheque_number'].setValue(data[0][0].cheque_number);
 				this.saleDetailsForm.controls['upi_transaction_id'].setValue(data[0][0].upi_transaction_id);
 				this.saleDetailsForm.controls['customer_id'].setValue(data[0][0].customer_id_name);
@@ -563,6 +582,7 @@ export class SaleInvoiceComponent implements OnInit {
 				this.selectedCustomerObj.customer_district = data[0][0].customer_district;
 				this.selectedCustomerObj.customer_pin_code = data[0][0].customer_pin_code;
 				this.selectedCustomerObj.customer_mobile_no = data[0][0].customer_mobile_no;
+				this.onPaymentBankChange();
 			},
 			(error) => {
 				this.toastrService.error(error.error.message, 'Error!');
@@ -584,12 +604,12 @@ export class SaleInvoiceComponent implements OnInit {
 	exportInvoice(operation) {
 		const doc = new jsPDF();
 		doc.setFont('Calibri');
-		doc.setFontSize(12);
+		doc.setFontSize(11);
 		doc.text('TAX INVOICE', 105, 10, 'center');
-		doc.setFontSize(15);
+		doc.setFontSize(13);
 		doc.setFontType('bold');
-		doc.text('' + this.companyDetails.company_name, 105, 20, 'center');
-		doc.setFontSize(12);
+		doc.text('' + this.companyDetails.company_name, 105, 17, 'center');
+		doc.setFontSize(11);
 		doc.setFontType('normal');
 		doc.text(
 			'' +
@@ -603,31 +623,32 @@ export class SaleInvoiceComponent implements OnInit {
 				' - ' +
 				this.companyDetails.pin_code,
 			105,
-			25,
+			22,
 			'center'
 		);
-		doc.text('Email : ' + this.companyDetails.company_email, 105, 30, 'center');
-		doc.text('Mob. No. : ' + this.companyDetails.mobile_number, 105, 35, 'center');
+		doc.text('Email : ' + this.companyDetails.company_email, 105, 27, 'center');
+		doc.text('Mob. No. : ' + this.companyDetails.mobile_number, 105, 32, 'center');
 		doc.setDrawColor(0);
 		doc.setLineWidth(0.5);
 		doc.setFillColor(255, 255, 255);
-		doc.rect(25, 42, 165, 252, 'FD'); //Fill and Border
-		doc.line(25, 50, 190, 50);
+		doc.rect(25, 40, 165, 235, 'FD'); //Fill and Border
+		doc.line(25, 46, 190, 46);
+		doc.line(110, 52, 190, 52);
 		doc.line(110, 58, 190, 58);
-		doc.line(110, 66, 190, 66);
-		doc.line(110, 74, 190, 74);
-		doc.line(110, 82, 190, 82);
-		doc.line(25, 90, 190, 90);
-		doc.line(25, 98, 190, 98);
-		doc.line(25, 106, 190, 106);
-		doc.line(110, 42, 110, 222);
+		doc.line(110, 64, 190, 64);
+		doc.line(110, 70, 190, 70);
+		doc.line(110, 76, 190, 76);
+		doc.line(25, 83, 190, 83);
+		doc.line(25, 89, 190, 89);
+		doc.line(25, 95, 190, 95);
+		doc.line(110, 40, 110, 208);
 		doc.setFontStyle('bold');
-		doc.text('Company GSTIN : ', 27, 47);
-		doc.text('' + this.companyDetails.company_gst_no, 65, 47);
-		doc.text('Company PAN : ', 111, 47);
-		doc.text('' + this.companyDetails.company_pan_no, 143, 47);
-		doc.text('Invoice No. : ', 111, 55);
-		doc.text('' + this.saleDetailsForm.controls['invoice_no'].value, 188, 55, 'right');
+		doc.text('Company GSTIN : ', 27, 44);
+		doc.text('' + this.companyDetails.company_gst_no, 65, 44);
+		doc.text('Company PAN : ', 111, 44);
+		doc.text('' + this.companyDetails.company_pan_no, 143, 44);
+		doc.text('Invoice No. : ', 111, 50);
+		doc.text('' + this.saleDetailsForm.controls['invoice_no'].value, 188, 50, 'right');
 		let invoice_date;
 		if (this.saleDetailsForm.controls['invoice_date'].value != null) {
 			let beforeFormatDate = this.saleDetailsForm.controls['invoice_date'].value;
@@ -672,22 +693,22 @@ export class SaleInvoiceComponent implements OnInit {
 		var splittedCustomerName = doc.splitTextToSize(customer_name, 90);
 		console.log(splittedCustomerName);
 		//doc.text(15, 20, splitTitle);
-		doc.text('Invoice Date. : ', 111, 63);
-		doc.text('' + invoice_date, 188, 63, 'right');
-		doc.text('E-Way Bill No. : ', 111, 71);
-		doc.text('' + this.saleDetailsForm.controls['eWayBillNumber'].value, 188, 71, 'right');
-		doc.text('Dispatch Through : ', 111, 79);
-		doc.text('' + this.saleDetailsForm.controls['dispatch_through'].value, 188, 79, 'right');
-		doc.text('Vehicle No. : ', 111, 87);
-		doc.text('' + this.saleDetailsForm.controls['vehicle_number'].value, 188, 87, 'right');
-		doc.text('Delivery Note : ', 111, 95);
-		doc.text('', 188, 95, 'right');
-		doc.text('Customer GSTIN : ', 27, 95);
-		doc.text('' + customer_gst, 65, 95);
+		doc.text('Invoice Date. : ', 111, 56);
+		doc.text('' + invoice_date, 188, 56, 'right');
+		doc.text('E-Way Bill No. : ', 111, 62);
+		doc.text('' + this.saleDetailsForm.controls['eWayBillNumber'].value, 188, 62, 'right');
+		doc.text('Dispatch Through : ', 111, 68);
+		doc.text('' + this.saleDetailsForm.controls['dispatch_through'].value, 188, 68, 'right');
+		doc.text('Vehicle No. : ', 111, 74);
+		doc.text('' + this.saleDetailsForm.controls['vehicle_number'].value, 188, 74, 'right');
+		doc.text('Delivery Note : ', 111, 80);
+		doc.text('', 188, 80, 'right');
+		doc.text('Customer GSTIN : ', 27, 87);
+		doc.text('' + customer_gst, 65, 87);
 		doc.setFontStyle('normal');
-		doc.text('To , ', 27, 55);
+		doc.text('To , ', 27, 50);
 		doc.setFontStyle('bold');
-		let customerDetailsTop = 61;
+		let customerDetailsTop = 56;
 		for (let i = 0; i < splittedCustomerName.length; i++) {
 			doc.text('' + splittedCustomerName[i], 27, customerDetailsTop);
 			customerDetailsTop = customerDetailsTop + 6;
@@ -703,21 +724,21 @@ export class SaleInvoiceComponent implements OnInit {
 		let formattedTahsil = customer_tahsil == '' ? '' : 'Tal. ' + customer_tahsil + ' ';
 		doc.text(formattedTahsil + 'Dist-' + customer_district + ' ' + customer_pin_code, 27, customerDetailsTop);
 		doc.text('Mob.No.' + customer_mobile_no, 27, customerDetailsTop + 5);
-		doc.line(37, 98, 36, 187);
-		doc.line(60, 98, 60, 222);
-		doc.line(131, 98, 131, 222);
-		doc.line(153, 98, 153, 187);
-		doc.line(166, 98, 166, 229);
-		doc.setFontSize(11);
+		doc.line(37, 89, 36, 178);
+		doc.line(60, 89, 60, 208);
+		doc.line(131, 89, 131, 208);
+		doc.line(153, 89, 153, 178);
+		doc.line(166, 89, 166, 214);
+		doc.setFontSize(10);
 		doc.setFontStyle('bold');
-		doc.text('Sr.No.', 26, 103);
-		doc.text('HSN/SAC', 39, 103);
-		doc.text('Particulars', 62, 103);
-		doc.text('Quantity', 111, 103);
-		doc.text('Rate', 133, 103);
-		doc.text('Per', 155, 103);
-		doc.text('Amount', 168, 103);
-		var top = 117;
+		doc.text('Sr.No.', 26, 93);
+		doc.text('HSN/SAC', 39, 93);
+		doc.text('Particulars', 62, 93);
+		doc.text('Quantity', 111, 93);
+		doc.text('Rate', 133, 93);
+		doc.text('Per', 155, 93);
+		doc.text('Amount', 168, 93);
+		var top = 100;
 
 		var srNo = 1;
 		for (let i = 0; i < this.selectedProductList.length; i++) {
@@ -739,50 +760,50 @@ export class SaleInvoiceComponent implements OnInit {
 			doc.text('' + this.selectedProductList[i].rate, 151, top, 'right');
 			doc.text('' + this.selectedProductList[i].ratePerUnit, 164, top, 'right');
 			doc.text('' + this.selectedProductList[i].total, 188, top, 'right');
-			top += 15;
+			top += 10;
 			srNo += 1;
 		}
-		doc.line(25, 187, 190, 187);
-		doc.line(25, 194, 190, 194);
-		doc.line(60, 201, 190, 201);
-		doc.line(60, 208, 190, 208);
-		doc.line(60, 215, 190, 215);
-		doc.line(25, 222, 190, 222);
-		doc.line(25, 229, 190, 229);
-		doc.line(25, 241, 190, 241);
-		doc.line(25, 257, 190, 257);
+		doc.line(25, 178, 190, 178);
+		doc.line(25, 184, 190, 184);
+		doc.line(60, 190, 190, 190);
+		doc.line(60, 196, 190, 196);
+		doc.line(60, 202, 190, 202);
+		doc.line(25, 208, 190, 208);
+		doc.line(25, 214, 190, 214);
+		doc.line(25, 224, 190, 224);
+		doc.line(25, 238, 190, 238);
 
-		doc.text('Total', 100, 192);
-		doc.text(this.totalQuantity + ' ' + this.totalQuantityUnit, 129, 192, 'right');
-		doc.text('' + this.totalSellingCost, 188, 192, 'right');
-		doc.text('Output CGST ' + this.cgst + '%', 62, 199, 'left');
-		doc.text('' + this.cgst_amount, 188, 199, 'right');
-		doc.text('Output SGST ' + this.sgst + '%', 62, 206, 'left');
-		doc.text('' + this.sgst_amount, 188, 206, 'right');
-		doc.text('Output IGST', 62, 213, 'left');
-		doc.text('Round Off', 62, 220, 'left');
-		doc.text('Grand Total', 140, 227);
-		doc.text('' + this.roundOffValue, 188, 220, 'right');
-		doc.text('' + this.totalRoundOffAmount, 188, 227, 'right');
+		doc.text('Total', 100, 182);
+		doc.text(this.totalQuantity + ' ' + this.totalQuantityUnit, 129, 182, 'right');
+		doc.text('' + this.totalSellingCost, 188, 182, 'right');
+		doc.text('Output CGST ' + this.cgst + '%', 62, 188, 'left');
+		doc.text('' + this.cgst_amount, 188, 188, 'right');
+		doc.text('Output SGST ' + this.sgst + '%', 62, 194, 'left');
+		doc.text('' + this.sgst_amount, 188, 194, 'right');
+		doc.text('Output IGST', 62, 200, 'left');
+		doc.text('Round Off', 62, 206, 'left');
+		doc.text('Grand Total', 140, 212);
+		doc.text('' + this.roundOffValue, 188, 206, 'right');
+		doc.text('' + this.totalRoundOffAmount, 188, 212, 'right');
 		doc.setFontStyle('normal');
-		doc.text('Amount in words :', 26, 234);
+		doc.text('Amount in words :', 26, 218);
 		doc.setFontStyle('bold');
-		doc.text('' + this.numberToWordsPipe.transform(this.totalRoundOffAmount), 26, 239);
-		doc.text('Declaration :', 26, 245);
+		doc.text('' + this.numberToWordsPipe.transform(this.totalRoundOffAmount), 26, 222);
+		doc.text('Declaration :', 26, 228);
 		doc.setFontStyle('normal');
-		doc.text('We declare that this invoice shows the actual price of the goods described and', 26, 250);
-		doc.text('that all particulars are true and correct.', 26, 255);
+		doc.text('We declare that this invoice shows the actual price of the goods described and', 26, 232);
+		doc.text('that all particulars are true and correct.', 26, 236);
 
 		doc.setFontStyle('bold');
 		console.log(this.selectedBankObj);
 		if (Object.keys(this.selectedBankObj).length !== 0) {
-			var splittedBankname = doc.splitTextToSize(this.selectedBankObj.bank_name, 65);
+			var splittedBankname = doc.splitTextToSize(this.selectedBankObj.bank_name, 60);
 			console.log(splittedBankname);
-			doc.line(110, 257, 110, 294);
-			doc.text('Bank Details', 26, 261);
-			doc.line(25, 263, 110, 263);
-			doc.text('Bank Name :', 26, 268);
-			var bankDetailsTop = 268;
+			doc.line(110, 238, 110, 275);
+			doc.text('Bank Details', 26, 242);
+			doc.line(25, 244, 110, 244);
+			doc.text('Bank Name :', 26, 248);
+			var bankDetailsTop = 248;
 			for (let i = 0; i < splittedBankname.length; i++) {
 				doc.text('' + splittedBankname[i], 52, bankDetailsTop);
 				bankDetailsTop += 6;
@@ -794,9 +815,9 @@ export class SaleInvoiceComponent implements OnInit {
 			doc.text('IFSC Code :', 26, bankDetailsTop + 12);
 			doc.text('' + this.selectedBankObj.ifsc_code, 52, bankDetailsTop + 12);
 		}
-		doc.text('For ' + this.companyDetails.company_name, 150, 273, 'center');
+		doc.text('For ' + this.companyDetails.company_name, 150, 248, 'center');
 		doc.setFontStyle('normal');
-		doc.text('Authorised Signatory', 150, 290, 'center');
+		doc.text('Authorised Signatory', 150, 269, 'center');
 
 		//08013100
 		if (operation == 'open') {
