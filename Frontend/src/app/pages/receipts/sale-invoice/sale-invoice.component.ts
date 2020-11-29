@@ -29,7 +29,7 @@ export class SaleInvoiceComponent implements OnInit {
 	public myDatePickerOptions: IMyDpOptions = {
 		// other options...
 		dateFormat: 'dd.mm.yyyy'
-	};
+		};
 
 	setDate(): void {
 		// Set today date using the patchValue function
