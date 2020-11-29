@@ -43,7 +43,10 @@ import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+
+// import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
 
 // export function HttpLoaderFactory(http:HttpClient){
 //   return new TranslateHttpLoader(http);
@@ -84,6 +87,22 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 	minTime: 300
 };
 
+import en from '@angular/common/locales/en';
+
+import { NZ_ICONS } from 'ng-zorro-antd/icon';
+import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
+import { IconDefinition } from '@ant-design/icons-angular';
+import * as AllIcons from '@ant-design/icons-angular/icons';
+
+import { DemoNgZorroAntdModule } from './ng-zorro-antd.module';
+import { TokenIntercepterService } from '../app/interceptor/token-interceptor.service';
+registerLocaleData(en);
+
+const antDesignIcons = AllIcons as {
+	[key: string]: IconDefinition;
+};
+const icons: IconDefinition[] = Object.keys(antDesignIcons).map((key) => antDesignIcons[key]);
+
 @NgModule({
 	imports: [
 		ToastrModule.forRoot({
@@ -119,7 +138,14 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 		{
 			provide: LocationStrategy,
 			useClass: HashLocationStrategy
-		}
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: TokenIntercepterService,
+			multi: true
+		},
+		{ provide: NZ_I18N, useValue: en_US },
+		{ provide: NZ_ICONS, useValue: icons }
 	],
 	bootstrap: [ AppComponent ]
 })

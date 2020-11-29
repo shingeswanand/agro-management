@@ -26,13 +26,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { DpDatePickerModule } from 'ng2-date-picker';
 import { AngularMyDatePickerModule } from 'angular-mydatepicker';
 import { MyDatePickerModule } from 'mydatepicker';
-
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NumberToWordsPipe } from '../receipts/sale-invoice/number-to-words.pipe';
-
+import { Daterangepicker } from 'ng2-daterangepicker';
 @NgModule({
 	declarations: [
 		GstBillsListingComponent,
@@ -64,7 +63,8 @@ import { NumberToWordsPipe } from '../receipts/sale-invoice/number-to-words.pipe
 		MatTableModule,
 		MatPaginatorModule,
 		MatFormFieldModule,
-		MatInputModule
+		MatInputModule,
+		Daterangepicker
 	],
 	providers: [ NumberToWordsPipe ]
 })

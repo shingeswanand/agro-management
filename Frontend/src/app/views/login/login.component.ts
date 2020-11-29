@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-
+import * as jwt_decode from 'jwt-decode';
 
 @Component({
 	selector: 'app-dashboard',
@@ -17,14 +17,14 @@ export class LoginComponent {
 	username: any;
 	password: any;
 	loginDetails: any;
-	loading:boolean=false;
+	loading: boolean = false;
 
 	constructor(
 		private router: Router,
 		private fb: FormBuilder,
 		private authenticationService: AuthenticationService,
-		private toastrService:ToastrService,
-		private ngxLoader:NgxUiLoaderService
+		private toastrService: ToastrService,
+		private ngxLoader: NgxUiLoaderService
 	) {}
 
 	ngOnInit() {
@@ -41,28 +41,28 @@ export class LoginComponent {
 		}
 
 		let loginData = {
-			userName: this.loginForm.value['username'],
-			userPassword: this.loginForm.value['password']
+			email: this.loginForm.value['username'],
+			password: this.loginForm.value['password']
 		};
 		this.ngxLoader.start();
-		this.loading=true;
+		this.loading = true;
 		this.authenticationService.login(loginData).subscribe(
 			(data) => {
 				this.ngxLoader.stop();
-				this.loading=false;
-				this.toastrService.success("You are successful logged in.", 'Logged In!'); 
-				localStorage.setItem('companyId', btoa(data[0]['company_id']));
-				localStorage.setItem('userId', btoa(data[0]['user_id']));
-				localStorage.setItem('userName', btoa(data[0]['user_name']));
-				localStorage.setItem('userPassword', btoa(data[0]['user_password']));
-				localStorage.setItem('userRole', btoa(data[0]['user_role']));
-				localStorage.setItem('companyName', btoa(data[0]['company_name']));
+				this.loading = false;
+				this.toastrService.success('You are successful logged in.', 'Logged In!');
+				localStorage.setItem('companyId', btoa(data['companyid']));
+				localStorage.setItem('userId', btoa(data['userid']));
+				localStorage.setItem('userName', btoa(data['username']));
+				localStorage.setItem('accessToken', data['accessToken']);
+				localStorage.setItem('userRole', btoa(data['userrole']));
+				localStorage.setItem('companyName', btoa(data['companyname']));
 				this.router.navigate([ '/dashboard' ]);
 			},
 			(error) => {
 				this.toastrService.error(error.message, 'Error!'); // show error message
 				this.ngxLoader.stop();
-				this.loading=false;
+				this.loading = false;
 			}
 		);
 	}
